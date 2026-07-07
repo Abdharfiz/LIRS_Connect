@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaxTrack – LIRS Connect | My Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="taxpayer-dashboard.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">TT</div>
+        <div class="brand-text">
+          <div class="b-name">TAX Connect</div>
+          <div class="b-sub">TaxTrack</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section-label">Menu</div>
+
+      <a href="taxpayer-dashboard.html" class="nav-item active">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+        >
+          <rect x="2" y="2" width="7" height="7" rx="1.5" />
+          <rect x="11" y="2" width="7" height="7" rx="1.5" />
+          <rect x="2" y="11" width="7" height="7" rx="1.5" />
+          <rect x="11" y="11" width="7" height="7" rx="1.5" />
+        </svg>
+        Dashboard
+      </a>
+
+      <a href="submit-complaint.html" class="nav-item">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+        >
+          <rect x="3" y="3" width="14" height="14" rx="2" />
+          <path d="M10 7v6M7 10h6" />
+        </svg>
+        Submit Complaint
+      </a>
+
+      <a href="my-complaints.html" class="nav-item">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+        >
+          <path d="M4 4h12M4 8h8M4 12h10M4 16h6" />
+        </svg>
+        My Complaints
+      </a>
+
+      <a href="notifications.html" class="nav-item">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+        >
+          <path
+            d="M10 2a6 6 0 0 0-6 6c0 5-2 6-2 6h16s-2-1-2-6a6 6 0 0 0-6-6z"
+          />
+          <path d="M11.7 17a2 2 0 0 1-3.4 0" />
+        </svg>
+        Notifications
+        <span class="nav-badge">2</span>
+      </a>
+
+      <a href="profile.html" class="nav-item">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+        >
+          <circle cx="10" cy="7" r="3.5" />
+          <path d="M3 17c0-3.3 3.1-6 7-6s7 2.7 7 6" />
+        </svg>
+        Profile
+      </a>
+
+      <div class="sidebar-footer">
+        <div class="taxpayer-mini">
+          <div class="taxpayer-av" id="sidebar-av">AY</div>
+          <div class="taxpayer-info">
+            <div class="t-name" id="sidebar-name">Abdulhafeez Yusuf</div>
+            <div class="t-tin">TIN: 1234567890</div>
+          </div>
+        </div>
+        <a href="index.html" class="logout-btn" id="logout-btn">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path d="M13 15l5-5-5-5M18 10H7" />
+            <path d="M7 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h3" />
+          </svg>
+          Log Out
+        </a>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div>
+          <div class="topbar-title">My Dashboard</div>
+          <div class="topbar-sub">LIRS Connect · Taxpayer Portal</div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="welcome-banner">
+          <div class="welcome-text">
+            <div class="greeting">Welcome back,</div>
+            <h2 id="welcome-name">Abdulhafeez Yusuf</h2>
+            <p>
+              Manage your tax complaints and track their status here. Your voice
+              is officially heard.
+            </p>
+          </div>
+          <div class="welcome-actions">
+            <a href="submit-complaint.html" class="btn-primary">
+              Submit Complaint</a
+            >
+            <a href="my-complaints.html" class="btn-outline-white"
+              >My Complaints</a
+            >
+          </div>
+        </div>
+
+        <div class="section-header">
+          <div class="section-title">My Complaint Summary</div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card sc-green">
+            <div class="stat-icon ig">
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--green-mid)" stroke-width="1.5">
+                <rect x="4" y="2" width="12" height="16" rx="1.5" />
+                <path d="M7 6h6M7 9h6M7 12h4" />
+              </svg>
+            </div>
+            <div class="stat-value">4</div>
+            <div class="stat-label">Total Complaints</div>
+          </div>
+          <div class="stat-card sc-amber">
+            <div class="stat-icon ia">
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--amber)" stroke-width="1.5">
+                <circle cx="10" cy="10" r="7.5" />
+                <path d="M10 6v4l3 2" />
+              </svg>
+            </div>
+            <div class="stat-value">1</div>
+            <div class="stat-label">Pending</div>
+          </div>
+          <div class="stat-card sc-blue">
+            <div class="stat-icon ib">
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--blue)" stroke-width="1.5">
+                <circle cx="9" cy="9" r="6" />
+                <path d="M15 15l3 3" />
+              </svg>
+            </div>
+            <div class="stat-value">2</div>
+            <div class="stat-label">Under Review</div>
+          </div>
+          <div class="stat-card sc-resolve">
+            <div class="stat-icon ir">
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--green-mid)" stroke-width="1.5">
+                <circle cx="10" cy="10" r="7.5" />
+                <path d="m6.5 10 2.5 2.5 4.5-4.5" />
+              </svg>
+            </div>
+            <div class="stat-value">1</div>
+            <div class="stat-label">Resolved</div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <div class="section-title">Quick Actions</div>
+        </div>
+        <div class="quick-grid">
+          <a href="submit-complaint.html" class="quick-card">
+            <div class="quick-icon qg">
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--green-mid)" stroke-width="1.6">
+                <circle cx="10" cy="10" r="7.5" />
+                <path d="M10 6.5v7M6.5 10h7" />
+              </svg>
+            </div>
+            <div>
+              <div class="quick-label">Submit Complaint</div>
+              <div class="quick-desc">File a new complaint</div>
+            </div>
+          </a>
+          <a href="my-complaints.html" class="quick-card">
+            <div class="quick-icon qa">
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--amber)" stroke-width="1.6">
+                <path d="M4 4h12M4 8h8M4 12h10M4 16h6" />
+              </svg>
+            </div>
+            <div>
+              <div class="quick-label">View My Complaints</div>
+              <div class="quick-desc">Track all your cases</div>
+            </div>
+          </a>
+          <a href="profile.html" class="quick-card">
+            <div class="quick-icon qb">
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--blue)" stroke-width="1.6">
+                <circle cx="10" cy="7" r="3.5" />
+                <path d="M3 17c0-3.3 3.1-6 7-6s7 2.7 7 6" />
+              </svg>
+            </div>
+            <div>
+              <div class="quick-label">Update Profile</div>
+              <div class="quick-desc">Edit your details</div>
+            </div>
+          </a>
+          <a href="contact-support.html" class="quick-card">
+            <div class="quick-icon qr">
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--red)" stroke-width="1.6">
+                <path d="M6.8 3.5c.5 0 1 .3 1.2.8l.7 1.7a1.3 1.3 0 0 1-.3 1.4l-.9.9c.6 1.5 1.8 2.7 3.3 3.3l.9-.9a1.3 1.3 0 0 1 1.4-.3l1.7.7c.5.2.8.7.8 1.2v1.5c0 .8-.7 1.5-1.5 1.4-5.4-.6-9.7-4.9-10.3-10.3-.1-.8.6-1.5 1.4-1.5h1.5z" />
+              </svg>
+            </div>
+            <div>
+              <div class="quick-label">Contact Support</div>
+              <div class="quick-desc">Talk to an officer</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Recent Complaints</div>
+              <a href="my-complaints.html" class="section-link">View all →</a>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Complaint ID</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="cid">CMP001</span></td>
+                    <td>Double Tax Assessment</td>
+                    <td>10/06/2026</td>
+                    <td><span class="badge pending">Pending</span></td>
+                    <td>
+                      <button
+                        class="act-btn view"
+                        onclick="
+                          window.location.href =
+                            'complaint-detail.html?id=CMP001'
+                        "
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="cid">CMP002</span></td>
+                    <td>Payment Not Reflected</td>
+                    <td>05/06/2026</td>
+                    <td><span class="badge resolved">Resolved</span></td>
+                    <td>
+                      <button
+                        class="act-btn respond"
+                        onclick="
+                          window.location.href =
+                            'complaint-detail.html?id=CMP002'
+                        "
+                      >
+                        View Response
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="cid">CMP003</span></td>
+                    <td>Tax Clearance Certificate</td>
+                    <td>01/06/2026</td>
+                    <td><span class="badge review">Under Review</span></td>
+                    <td>
+                      <button
+                        class="act-btn view"
+                        onclick="
+                          window.location.href =
+                            'complaint-detail.html?id=CMP003'
+                        "
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Notifications</div>
+              <span class="badge pending">2 new</span>
+            </div>
+            <div
+              class="notif-item unread"
+              onclick="window.location.href = 'complaint-detail.html?id=CMP001'"
+            >
+              <div class="n-dot blue"></div>
+              <div>
+                <div class="n-text">
+                  Your complaint CMP001 is currently under review
+                </div>
+                <div class="n-time">2 hours ago</div>
+              </div>
+            </div>
+            <div
+              class="notif-item unread"
+              onclick="window.location.href = 'complaint-detail.html?id=CMP002'"
+            >
+              <div class="n-dot green"></div>
+              <div>
+                <div class="n-text">
+                  A response has been provided for complaint CMP002
+                </div>
+                <div class="n-time">Yesterday</div>
+              </div>
+            </div>
+            <div class="notif-item" onclick="showToast('No further details')">
+              <div class="n-dot amber"></div>
+              <div>
+                <div class="n-text">
+                  Your profile information has been updated successfully
+                </div>
+                <div class="n-time">3 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Responses from LIRS Officers</div>
+              <a href="my-complaints.html" class="section-link">View all →</a>
+            </div>
+            <div
+              class="response-item"
+              onclick="window.location.href = 'complaint-detail.html?id=CMP002'"
+            >
+              <div class="resp-meta">
+                <span class="resp-cid">CMP002</span>
+                <span class="resp-date">05/06/2026</span>
+              </div>
+              <div class="resp-subject">Payment Not Reflected — Resolved</div>
+              <div class="resp-preview">
+                Your payment has been verified and updated in our system. The
+                delay was due to a banking reconciliation issue...
+              </div>
+            </div>
+            <div
+              class="response-item"
+              onclick="window.location.href = 'complaint-detail.html?id=CMP003'"
+            >
+              <div class="resp-meta">
+                <span class="resp-cid">CMP003</span>
+                <span class="resp-date">03/06/2026</span>
+              </div>
+              <div class="resp-subject">
+                Tax Clearance Certificate — In Progress
+              </div>
+              <div class="resp-preview">
+                We have received your request and assigned it to Officer Bello
+                for processing. Expected resolution within 5 working days...
+              </div>
+            </div>
+            <div style="padding: 16px 20px">
+              <a
+                href="submit-complaint.html"
+                class="btn-primary"
+                style="width: 100%; justify-content: center"
+              >
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14">
+                  <circle cx="10" cy="10" r="7.5" />
+                  <path d="M10 6.5v7M6.5 10h7" />
+                </svg>
+                Submit a New Complaint
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <div class="profile-card">
+              <div class="profile-top">
+                <div class="profile-av" id="profile-av">AY</div>
+                <div class="profile-name" id="profile-name">
+                  Abdulhafeez Yusuf
+                </div>
+                <div class="profile-tin">TIN: 1234567890</div>
+              </div>
+              <div class="profile-fields">
+                <div class="profile-row">
+                  <span class="p-label">Email Address</span>
+                  <span class="p-value" id="profile-email"
+                    >abdulhafeez@example.com</span
+                  >
+                </div>
+                <div class="profile-row">
+                  <span class="p-label">Phone Number</span>
+                  <span class="p-value">+234 801 234 5678</span>
+                </div>
+                <div class="profile-row">
+                  <span class="p-label">Account Status</span>
+                  <span class="p-value"
+                    ><span class="badge resolved">
+                      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" width="11" height="11" style="margin-right: 3px">
+                        <path d="m4.5 10 3.5 3.5 7.5-7.5" />
+                      </svg>
+                      Verified</span
+                    ></span
+                  >
+                </div>
+              </div>
+              <a href="profile.html" class="btn-update">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14">
+                  <circle cx="10" cy="7" r="3.5" />
+                  <path d="M3 17c0-3.3 3.1-6 7-6s7 2.7 7 6" />
+                </svg>
+                Update Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      var userName = sessionStorage.getItem("userName") || "Abdulhafeez Yusuf";
+      var userEmail =
+        sessionStorage.getItem("userEmail") || "abdulhafeez@example.com";
+
+      function initials(name) {
+        return name
+          .split(" ")
+          .map(function (n) {
+            return n[0];
+          })
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
+      }
+
+      var ini = initials(userName);
+      document.getElementById("welcome-name").textContent = userName;
+      document.getElementById("sidebar-name").textContent = userName;
+      document.getElementById("sidebar-av").textContent = ini;
+      document.getElementById("profile-av").textContent = ini;
+      document.getElementById("profile-name").textContent = userName;
+      document.getElementById("profile-email").textContent = userEmail;
+
+      document
+        .getElementById("logout-btn")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          sessionStorage.clear();
+          showToast("Logged out successfully");
+          setTimeout(function () {
+            window.location.href = "index.html";
+          }, 1000);
+        });
+
+      var toastTimer;
+      function showToast(msg) {
+        var t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+          t.classList.remove("show");
+        }, 2800);
+      }
+    </script>
+  </body>
+</html>
