@@ -1198,7 +1198,6 @@
           </svg>
           Categories
         </div>
-      </div>
 
         <div class="nav-label" style="margin-top: 14px">System</div>
         <div class="nav-item" onclick="showTab('settings', this)">
@@ -1215,8 +1214,6 @@
             />
           </svg>
           Settings
-        </div>
-      </nav>
         </div>
       </nav>
       <div class="sidebar-footer">
@@ -2608,8 +2605,20 @@
                 </div>
                 <div
                   class="settings-nav-item"
-                  onclick="setSettingsNav(this, 's-notifs')"
+                  onclick="setSettingsNav(this, 's-system')"
                 >
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  >
+                    <circle cx="10" cy="10" r="2.6" />
+                    <path
+                      d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.1 4.9l-1.4 1.4M6.3 13.7l-1.4 1.4M15.1 15.1l-1.4-1.4M6.3 6.3 4.9 4.9"
+                    />
+                  </svg>
+                  System
                 </div>
               </div>
               <div class="settings-body">
@@ -2685,9 +2694,7 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
                     </div>
                     <button class="btn btn-primary">Update Password</button>
                   </div>
-
-
-                
+                </div>
 
                 <!-- System -->
                 <div id="s-system" style="display: none">
@@ -2751,10 +2758,41 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
             </div>
           </div>
         </div>
-
+      </div>
+    </div>
     <!-- /main -->
 
     <script>
+      // Guard: confirm there's a real admin session on the server before
+      // showing this page. Anyone not logged in as admin gets bounced.
+      (function checkSession() {
+        fetch("api/session.php", { credentials: "same-origin" })
+          .then((res) => res.json())
+          .then((result) => {
+            const isAdminRole =
+              result.data &&
+              result.data.loggedIn &&
+              (result.data.role === "super_admin" ||
+                result.data.role === "officer");
+            if (!isAdminRole) {
+              window.location.href = "login.html";
+              return;
+            }
+            sessionStorage.setItem("adminName", result.data.name);
+            sessionStorage.setItem("adminEmail", result.data.email);
+            document.getElementById("admin-name").textContent =
+              result.data.name;
+            document.getElementById("admin-avatar").textContent = initials(
+              result.data.name,
+            );
+            document.querySelector(".admin-role").textContent =
+              result.data.role === "super_admin" ? "Super Admin" : "Officer";
+          })
+          .catch(() => {
+            console.warn("Could not verify session with the backend.");
+          });
+      })();
+
       var adminName = sessionStorage.getItem("adminName") || "Amaka Adeyemi";
       function initials(n) {
         return n
@@ -2773,6 +2811,10 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
         .getElementById("logout-btn")
         .addEventListener("click", function (e) {
           e.preventDefault();
+          fetch("api/logout.php", {
+            method: "POST",
+            credentials: "same-origin",
+          });
           sessionStorage.clear();
           window.location.href = "index.html";
         });
@@ -2829,7 +2871,7 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
           .querySelectorAll(".settings-nav-item")
           .forEach((i) => i.classList.remove("active"));
         el.classList.add("active");
-        ["s-profile", "s-security", "s-notifs", "s-system"].forEach((id) => {
+        ["s-profile", "s-security", "s-system"].forEach((id) => {
           document.getElementById(id).style.display =
             id === sectionId ? "block" : "none";
         });
