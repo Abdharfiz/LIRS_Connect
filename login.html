@@ -635,7 +635,7 @@
               sessionStorage.setItem("userRole", "admin");
               sessionStorage.setItem("userName", result.data.name);
               sessionStorage.setItem("userEmail", result.data.email);
-              window.location.href = "admin-dashboard.html";
+              window.location.href = "admin-dashboard.php";
             } else {
               alertMsg.textContent =
                 result.message || "Invalid admin email or password.";
@@ -656,7 +656,7 @@
               sessionStorage.setItem("userName", result.data.name);
               sessionStorage.setItem("userEmail", result.data.email);
               sessionStorage.setItem("payID", result.data.payId);
-              window.location.href = "taxpayer-dashboard.html";
+              window.location.href = "taxpayer-dashboard.php";
             } else {
               alertMsg.textContent =
                 result.message || "Invalid credentials or missing PayID.";

@@ -1,3 +1,10 @@
+<?php
+ 
+// The current page can be determined from the filename or passed as a parameter
+
+// Get current page for active state
+$current_page = basename($_SERVER['PHP_SELF'], '.php');
+?>
 <aside class="sidebar">
   <div class="sidebar-brand">
     <div class="brand-icon">TT</div>
@@ -7,7 +14,7 @@
     </div>
   </div>
   <div class="sidebar-section-label">Menu</div>
-  <a href="taxpayer-dashboard.html" class="nav-item">
+  <a href="taxpayer-dashboard.php" class="nav-item <?php echo $current_page === 'taxpayer-dashboard' ? 'active' : ''; ?>">
     <svg
       class="nav-icon"
       viewBox="0 0 20 20"
@@ -22,7 +29,7 @@
     </svg>
     Dashboard
   </a>
-  <a href="submit-complaint.html" class="nav-item active">
+  <a href="submit-complaint.php" class="nav-item <?php echo $current_page === 'submit-complaint' ? 'active' : ''; ?>">
     <svg
       class="nav-icon"
       viewBox="0 0 20 20"
@@ -35,7 +42,7 @@
     </svg>
     Submit Complaint
   </a>
-  <a href="my-complaints.html" class="nav-item">
+  <a href="my-complaints.php" class="nav-item <?php echo $current_page === 'my-complaints' ? 'active' : ''; ?>">
     <svg
       class="nav-icon"
       viewBox="0 0 20 20"
@@ -47,7 +54,7 @@
     </svg>
     My Complaints
   </a>
-  <a href="notifications.html" class="nav-item">
+  <a href="notifications.php" class="nav-item <?php echo $current_page === 'notifications' ? 'active' : ''; ?>">
     <svg
       class="nav-icon"
       viewBox="0 0 20 20"
@@ -59,9 +66,9 @@
       <path d="M11.7 17a2 2 0 0 1-3.4 0" />
     </svg>
     Notifications
-    <span class="nav-badge">2</span>
+    <span class="nav-badge" id="notif-badge" style="display: none">0</span>
   </a>
-  <a href="profile.html" class="nav-item">
+  <a href="profile.php" class="nav-item <?php echo $current_page === 'profile' ? 'active' : ''; ?>">
     <svg
       class="nav-icon"
       viewBox="0 0 20 20"
@@ -78,8 +85,8 @@
     <div class="taxpayer-mini">
       <div class="taxpayer-av" id="sidebar-av">AY</div>
       <div class="taxpayer-info">
-        <div class="t-name" id="sidebar-name">Abdulhafeez Yusuf</div>
-        <div class="t-tin">TIN: 1234567890</div>
+        <div class="t-name" id="sidebar-name">User</div>
+        <div class="t-tin" id="sidebar-tin">TIN: --</div>
       </div>
     </div>
     <a href="index.html" class="logout-btn" id="logout-btn">

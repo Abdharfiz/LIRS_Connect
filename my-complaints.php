@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaxTrack – My Complaints</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>    <?php include 'includes/sidebar.php'; ?>
+
+    <div class="main">
+      <header class="topbar">
+        <div>
+          <div class="topbar-title">My Complaints</div>
+          <div class="topbar-sub">LIRS Connect · Taxpayer Portal</div>
+        </div>
+        <div class="topbar-right">
+          <a
+            href="submit-complaint.php"
+            class="btn-primary"
+            style="font-size: 12.5px; padding: 9px 16px"
+            ><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13">
+              <circle cx="10" cy="10" r="7.5" />
+              <path d="M10 6.5v7M6.5 10h7" />
+            </svg>
+            New Complaint</a
+          >
+          <div
+            class="icon-btn"
+            onclick="window.location.href = 'notifications.php'"
+          >
+            <div class="notif-dot"></div>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="#6b7a72"
+              stroke-width="1.7"
+            >
+              <path
+                d="M10 2a6 6 0 0 0-6 6c0 5-2 6-2 6h16s-2-1-2-6a6 6 0 0 0-6-6z"
+              />
+              <path d="M11.7 17a2 2 0 0 1-3.4 0" />
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="page-banner">
+          <div class="page-banner-text">
+            <div class="pb-eyebrow">LIRS Connect · Case History</div>
+            <h2>My Complaints</h2>
+            <p>
+              Track the status of all your submitted complaints in one place.
+            </p>
+          </div>
+          <div class="page-banner-icon">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M4 4h12M4 8h8M4 12h10M4 16h6" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Summary Strip -->
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+          "
+        >
+          <div
+            style="
+              background: var(--white);
+              border: 1px solid var(--border);
+              border-radius: 10px;
+              padding: 16px;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            "
+          >
+            <div
+              style="
+                width: 38px;
+                height: 38px;
+                border-radius: 9px;
+                background: var(--green-light);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+              "
+            >
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--green-mid)" stroke-width="1.5" width="18" height="18">
+                <rect x="4" y="2" width="12" height="16" rx="1.5" />
+                <path d="M7 6h6M7 9h6M7 12h4" />
+              </svg>
+            </div>
+            <div>
+              <div style="font-size: 22px; font-weight: 700" id="total-count">
+                0
+              </div>
+              <div style="font-size: 11.5px; color: var(--text-muted)">
+                Total
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              background: var(--white);
+              border: 1px solid var(--border);
+              border-radius: 10px;
+              padding: 16px;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            "
+          >
+            <div
+              style="
+                width: 38px;
+                height: 38px;
+                border-radius: 9px;
+                background: var(--amber-light);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+              "
+            >
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--amber)" stroke-width="1.5" width="18" height="18">
+                <circle cx="10" cy="10" r="7.5" />
+                <path d="M10 6v4l3 2" />
+              </svg>
+            </div>
+            <div>
+              <div style="font-size: 22px; font-weight: 700" id="pending-count">0</div>
+              <div style="font-size: 11.5px; color: var(--text-muted)">
+                Pending
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              background: var(--white);
+              border: 1px solid var(--border);
+              border-radius: 10px;
+              padding: 16px;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            "
+          >
+            <div
+              style="
+                width: 38px;
+                height: 38px;
+                border-radius: 9px;
+                background: var(--blue-light);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+              "
+            >
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--blue)" stroke-width="1.5" width="18" height="18">
+                <circle cx="9" cy="9" r="6" />
+                <path d="M15 15l3 3" />
+              </svg>
+            </div>
+            <div>
+              <div style="font-size: 22px; font-weight: 700" id="review-count">0</div>
+              <div style="font-size: 11.5px; color: var(--text-muted)">
+                Under Review
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              background: var(--white);
+              border: 1px solid var(--border);
+              border-radius: 10px;
+              padding: 16px;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            "
+          >
+            <div
+              style="
+                width: 38px;
+                height: 38px;
+                border-radius: 9px;
+                background: var(--green-light);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+              "
+            >
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--green-mid)" stroke-width="1.5" width="18" height="18">
+                <circle cx="10" cy="10" r="7.5" />
+                <path d="m6.5 10 2.5 2.5 4.5-4.5" />
+              </svg>
+            </div>
+            <div>
+              <div style="font-size: 22px; font-weight: 700" id="resolved-count">0</div>
+              <div style="font-size: 11.5px; color: var(--text-muted)">
+                Resolved
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+          "
+        >
+          <div style="flex: 1; position: relative">
+            <svg
+              style="
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+              "
+              width="14"
+              height="14"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="#6b7a72"
+              stroke-width="1.8"
+            >
+              <circle cx="9" cy="9" r="6" />
+              <path d="M15 15l3 3" />
+            </svg>
+            <input
+              class="form-input"
+              style="padding-left: 34px"
+              type="text"
+              id="search-input"
+              placeholder="Search by ID or subject..."
+              oninput="filterTable()"
+            />
+          </div>
+          <select
+            class="form-select"
+            style="width: 160px"
+            id="status-filter"
+            onchange="filterTable()"
+          >
+            <option value="">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Under Review">Under Review</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+          <select
+            class="form-select"
+            style="width: 140px"
+            id="sort-filter"
+            onchange="filterTable()"
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">All Complaints</div>
+            <span class="badge review" id="showing-label">Showing 0</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Complaint ID</th>
+                  <th>Subject</th>
+                  <th>Category</th>
+                  <th>Date Filed</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="complaints-tbody"></tbody>
+            </table>
+          </div>
+          <div
+            id="empty-state"
+            style="
+              display: none;
+              padding: 40px;
+              text-align: center;
+              color: var(--text-muted);
+            "
+          >
+            <div style="margin-bottom: 10px; display: flex; justify-content: center">
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--text-muted)" stroke-width="1.4" width="32" height="32">
+                <circle cx="9" cy="9" r="6" />
+                <path d="M15 15l3 3" />
+              </svg>
+            </div>
+            <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px">
+              No complaints found
+            </div>
+            <div style="font-size: 12.5px">
+              Try adjusting your search or filter.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      function filterTable() {
+        var search = document
+          .getElementById("search-input")
+          .value.toLowerCase();
+        var status = document.getElementById("status-filter").value;
+        var rows = Array.from(
+          document.querySelectorAll("#complaints-tbody tr"),
+        );
+        var visible = 0;
+        rows.forEach(function (row) {
+          var text = row.textContent.toLowerCase();
+          var rowStatus = row.getAttribute("data-status");
+          var matchSearch = !search || text.includes(search);
+          var matchStatus = !status || rowStatus === status;
+          var show = matchSearch && matchStatus;
+          row.style.display = show ? "" : "none";
+          if (show) visible++;
+        });
+        document.getElementById("showing-label").textContent =
+          "Showing " + visible;
+        document.getElementById("empty-state").style.display =
+          visible === 0 ? "" : "none";
+      }
+
+      var toastTimer;
+      function showToast(msg) {
+        var t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+          t.classList.remove("show");
+        }, 2800);
+      }
+
+      // Load complaints on page load
+      document.addEventListener("DOMContentLoaded", function() {
+        loadComplaints();
+      });
+
+      function loadComplaints() {
+        fetch("api/get-complaints.php", { credentials: "same-origin" })
+          .then(function(res) {
+            return res.json().then(function(data) {
+              return { status: res.status, data: data };
+            });
+          })
+          .then(function(result) {
+            var data = result.data;
+            if (result.status === 401) {
+              window.location.href = "login.php";
+              return;
+            }
+            if (data.success) {
+              var payload = data.data || {};
+              renderComplaints(payload.complaints || [], payload.pagination || null);
+            } else {
+              showToast("Error loading complaints: " + (data.message || "Unknown error"));
+              renderComplaints([], null);
+            }
+          })
+          .catch(function(err) {
+            console.error("Fetch error:", err);
+            showToast("Network error: " + err.message);
+            renderComplaints([], null);
+          });
+      }
+
+      function renderComplaints(complaints, pagination) {
+        var tbody = document.getElementById("complaints-tbody");
+        tbody.innerHTML = "";
+
+        if (!complaints || complaints.length === 0) {
+          document.getElementById("empty-state").style.display = "";
+          document.getElementById("showing-label").textContent = "Showing 0";
+          document.getElementById("total-count").textContent = "0";
+          document.getElementById("pending-count").textContent = "0";
+          document.getElementById("review-count").textContent = "0";
+          document.getElementById("resolved-count").textContent = "0";
+          return;
+        }
+
+        var totals = {
+          pending: 0,
+          review: 0,
+          resolved: 0,
+        };
+
+        complaints.forEach(function(c) {
+          var row = document.createElement("tr");
+          row.setAttribute("data-status", c.status);
+          row.setAttribute("data-date", c.created_at);
+          
+          var statusBadgeClass = c.status.toLowerCase().replace(" ", "-");
+          var statusColor = {
+            "new": "pending",
+            "pending": "pending",
+            "under-review": "review",
+            "resolved": "resolved",
+            "rejected": "rejected"
+          }[statusBadgeClass] || "pending";
+
+          if (statusColor === "pending") totals.pending++;
+          if (statusColor === "review") totals.review++;
+          if (statusColor === "resolved") totals.resolved++;
+          
+          var actionText = c.status === "Resolved" ? "View Response" : "View";
+          var actionClass = c.status === "Resolved" ? "respond" : "view";
+          
+          row.innerHTML = 
+            '<td><span class="cid">' + c.reference_id + '</span></td>' +
+            '<td>' + c.subject + '</td>' +
+            '<td><span style="font-size: 12px; color: var(--text-muted)">' + c.category + '</span></td>' +
+            '<td>' + formatDate(c.created_at) + '</td>' +
+            '<td><span class="badge ' + statusColor + '">' + c.status + '</span></td>' +
+            '<td><button class="act-btn ' + actionClass + '" onclick="window.location.href = \'complaint-detail.php?id=' + c.id + '\'">' + actionText + '</button></td>';
+          
+          tbody.appendChild(row);
+        });
+
+        document.getElementById("empty-state").style.display = "none";
+        document.getElementById("showing-label").textContent =
+          "Showing " + complaints.length + (pagination && pagination.total ? " of " + pagination.total : "");
+        document.getElementById("total-count").textContent =
+          pagination && pagination.total ? pagination.total : complaints.length;
+        document.getElementById("pending-count").textContent = totals.pending;
+        document.getElementById("review-count").textContent = totals.review;
+        document.getElementById("resolved-count").textContent = totals.resolved;
+      }
+
+      function formatDate(dateStr) {
+        var d = new Date(dateStr);
+        var day = String(d.getDate()).padStart(2, '0');
+        var month = String(d.getMonth() + 1).padStart(2, '0');
+        var year = d.getFullYear();
+        return day + '/' + month + '/' + year;
+      }
+    </script>
+  </body>
+</html>
