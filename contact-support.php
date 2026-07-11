@@ -8,179 +8,9 @@
       href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="my-complaints.css" />
-    <style>
-      .support-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
-        margin-bottom: 28px;
-      }
-      .support-card {
-        background: var(--white);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .support-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 11px;
-        background: var(--green-light);
-        color: var(--green-mid);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .support-icon svg {
-        width: 20px;
-        height: 20px;
-      }
-      .support-title {
-        font-size: 14px;
-        font-weight: 700;
-      }
-      .support-desc {
-        font-size: 12.5px;
-        color: var(--text-muted);
-        line-height: 1.5;
-      }
-      .support-value {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--green-mid);
-      }
-      .office-item {
-        padding: 16px 20px;
-        border-bottom: 1px solid var(--border);
-      }
-      .office-item:last-child {
-        border-bottom: none;
-      }
-      .office-name {
-        font-size: 13.5px;
-        font-weight: 700;
-      }
-      .office-addr {
-        font-size: 12.5px;
-        color: var(--text-muted);
-        margin-top: 3px;
-        line-height: 1.5;
-      }
-      .office-hours {
-        font-size: 11.5px;
-        color: var(--green-mid);
-        font-weight: 600;
-        margin-top: 6px;
-      }
-    </style>
+    <link rel="stylesheet" href="app.css" />
   </head>
-  <body>
-    <aside class="sidebar">
-      <div class="sidebar-brand">
-        <div class="brand-icon">TT</div>
-        <div class="brand-text">
-          <div class="b-name">LIRS Connect</div>
-          <div class="b-sub">TaxTrack</div>
-        </div>
-      </div>
-      <div class="sidebar-section-label">Menu</div>
-      <a href="taxpayer-dashboard.html" class="nav-item">
-        <svg
-          class="nav-icon"
-          viewBox="0 0 20 20"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.6"
-        >
-          <rect x="2" y="2" width="7" height="7" rx="1.5" />
-          <rect x="11" y="2" width="7" height="7" rx="1.5" />
-          <rect x="2" y="11" width="7" height="7" rx="1.5" />
-          <rect x="11" y="11" width="7" height="7" rx="1.5" />
-        </svg>
-        Dashboard
-      </a>
-      <a href="submit-complaint.html" class="nav-item">
-        <svg
-          class="nav-icon"
-          viewBox="0 0 20 20"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.6"
-        >
-          <rect x="3" y="3" width="14" height="14" rx="2" />
-          <path d="M10 7v6M7 10h6" />
-        </svg>
-        Submit Complaint
-      </a>
-      <a href="my-complaints.html" class="nav-item">
-        <svg
-          class="nav-icon"
-          viewBox="0 0 20 20"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.6"
-        >
-          <path d="M4 4h12M4 8h8M4 12h10M4 16h6" />
-        </svg>
-        My Complaints
-      </a>
-      <a href="notifications.html" class="nav-item">
-        <svg
-          class="nav-icon"
-          viewBox="0 0 20 20"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.6"
-        >
-          <path
-            d="M10 2a6 6 0 0 0-6 6c0 5-2 6-2 6h16s-2-1-2-6a6 6 0 0 0-6-6z"
-          />
-          <path d="M11.7 17a2 2 0 0 1-3.4 0" />
-        </svg>
-        Notifications
-        <span class="nav-badge">2</span>
-      </a>
-      <a href="profile.html" class="nav-item">
-        <svg
-          class="nav-icon"
-          viewBox="0 0 20 20"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.6"
-        >
-          <circle cx="10" cy="7" r="3.5" />
-          <path d="M3 17c0-3.3 3.1-6 7-6s7 2.7 7 6" />
-        </svg>
-        Profile
-      </a>
-      <div class="sidebar-footer">
-        <div class="taxpayer-mini">
-          <div class="taxpayer-av" id="sidebar-av">AY</div>
-          <div class="taxpayer-info">
-            <div class="t-name" id="sidebar-name">Abdulhafeez Yusuf</div>
-            <div class="t-tin">TIN: 1234567890</div>
-          </div>
-        </div>
-        <a href="index.html" class="logout-btn" id="logout-btn">
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 20 20"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path d="M13 15l5-5-5-5M18 10H7" />
-            <path d="M7 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h3" />
-          </svg>
-          Log Out
-        </a>
-      </div>
-    </aside>
+  <body>    <?php include 'includes/sidebar.php'; ?>
 
     <div class="main">
       <header class="topbar">
@@ -247,7 +77,7 @@
               instead.
             </div>
             <a
-              href="submit-complaint.html"
+              href="submit-complaint.php"
               class="support-value"
               style="text-decoration: none"
               >Submit a complaint →</a
@@ -272,7 +102,7 @@
                       class="form-input"
                       id="sup-name"
                       type="text"
-                      value="Abdulhafeez Yusuf"
+                      value=""
                     />
                   </div>
                   <div class="form-group">
@@ -281,7 +111,7 @@
                       class="form-input"
                       id="sup-email"
                       type="email"
-                      value="abdulhafeez@example.com"
+                      value=""
                     />
                   </div>
                   <div class="form-group full">
@@ -351,7 +181,20 @@
     <div class="toast" id="toast"></div>
 
     <script>
-      var userName = sessionStorage.getItem("userName") || "Abdulhafeez Yusuf";
+      fetch("api/get-profile.php", { credentials: "same-origin" })
+        .then(function (res) { return res.json(); })
+        .then(function (result) {
+          var profile = result.data && result.data.profile ? result.data.profile : null;
+          if (profile) {
+            document.getElementById("sup-name").value = profile.first_name + " " + profile.last_name;
+            document.getElementById("sup-email").value = profile.email;
+          }
+        })
+        .catch(function () {
+          // Leave fields blank if profile lookup fails — not critical here.
+        });
+
+      var userName = sessionStorage.getItem("userName") || "User";
       var userEmail =
         sessionStorage.getItem("userEmail") || "abdulhafeez@example.com";
 
@@ -377,19 +220,40 @@
           sessionStorage.clear();
           showToast("Logged out");
           setTimeout(function () {
-            window.location.href = "index.html";
+            window.location.href = "index.php";
           }, 1000);
         });
 
       function handleSupportSubmit(e) {
         e.preventDefault();
+        var name = document.getElementById("sup-name").value.trim();
+        var email = document.getElementById("sup-email").value.trim();
+        var topic = document.getElementById("sup-topic").value;
         var message = document.getElementById("sup-message").value.trim();
+
         if (!message) {
           showToast("Please enter a message before sending.");
           return;
         }
-        document.getElementById("sup-message").value = "";
-        showToast("Message sent — an officer will respond by email shortly.");
+
+        fetch("api/submit-support.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify({ name: name, email: email, topic: topic, message: message }),
+        })
+          .then(function (res) { return res.json(); })
+          .then(function (result) {
+            if (result.success) {
+              document.getElementById("sup-message").value = "";
+              showToast(result.message);
+            } else {
+              showToast(result.message || "Could not send message.");
+            }
+          })
+          .catch(function () {
+            showToast("Could not reach the server. Please try again.");
+          });
       }
 
       var toastTimer;
