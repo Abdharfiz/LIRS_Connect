@@ -1,127 +1,281 @@
-<?php
-require_once __DIR__ . '/../includes/helpers.php';
-require_once __DIR__ . '/../config/db.php';
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LIRS Connect | Submit Complaint</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <?php include 'includes/sidebar.php'; ?>
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    respond(false, 'Invalid request method.', [], 405);
-}
+    <div class="main">
+      <header class="topbar">
+        <div>
+          <div class="topbar-title">Submit Complaint</div>
+          <div class="topbar-sub">LIRS Connect · Taxpayer Portal</div>
+        </div>
+      </header>
 
-// Ensure user is logged in as a taxpayer
-requireTaxpayer();
+      <div class="content">
+        <div class="page-banner">
+          <div class="page-banner-text">
+            <div class="pb-eyebrow">LIRS Connect · New Case</div>
+            <h2>File a Tax Complaint</h2>
+            <p>
+              Submit a formal complaint to LIRS and track its progress from your
+              dashboard.
+            </p>
+          </div>
+          <div class="page-banner-icon">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4">
+              <rect x="3" y="3" width="14" height="14" rx="2" />
+              <path d="M10 7v6M7 10h6" />
+            </svg>
+          </div>
+        </div>
 
-$body = getRequestBody();
-$taxpayer_id = $_SESSION['user_id'];
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Complaint Details</div>
+            </div>
+            <div class="panel-body">
+              <form id="complaint-form" style="display: flex; flex-direction: column; gap: 14px">
+                <div class="form-grid">
+                  <div class="form-group full">
+                    <label class="form-label" for="category">Category *</label>
+                    <select class="form-select" id="category" name="category" required>
+                      <option value="">Select category</option>
+                      <option value="assessment">Incorrect Tax Assessment</option>
+                      <option value="payment">Payment Verification</option>
+                      <option value="refund">Refund Request</option>
+                      <option value="tax_clearance">Tax Clearance Certificate</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
 
-// Get form fields
-$category    = cleanStr($body['category'] ?? '');
-$subject     = cleanStr($body['subject'] ?? '');
-$description = cleanStr($body['description'] ?? '');
+                  <div class="form-group full">
+                    <label class="form-label" for="subject">Subject *</label>
+                    <input
+                      class="form-input"
+                      id="subject"
+                      name="subject"
+                      type="text"
+                      maxlength="200"
+                      placeholder="Briefly describe the issue"
+                      required
+                    />
+                  </div>
 
-// Validation
-if ($category === '') {
-    respond(false, 'Please select a complaint category.', [], 422);
-}
-if ($subject === '') {
-    respond(false, 'Please enter a complaint subject.', [], 422);
-}
-if ($description === '') {
-    respond(false, 'Please enter a complaint description.', [], 422);
-}
-if (strlen($subject) < 5 || strlen($subject) > 200) {
-    respond(false, 'Subject must be between 5 and 200 characters.', [], 422);
-}
-if (strlen($description) < 20) {
-    respond(false, 'Description must be at least 20 characters.', [], 422);
-}
+                  <div class="form-group full">
+                    <label class="form-label" for="description">Description *</label>
+                    <textarea
+                      class="form-input"
+                      id="description"
+                      name="description"
+                      rows="7"
+                      placeholder="Provide enough detail for an officer to review your complaint"
+                      style="resize: vertical"
+                      required
+                    ></textarea>
+                  </div>
 
-// Validate category
-$valid_categories = ['assessment', 'payment', 'refund', 'tax_clearance', 'other'];
-$category_map = [
-    'tax clearance certificate' => 'tax_clearance',
-    'payment verification' => 'payment',
-    'incorrect tax assessment' => 'assessment',
-    'account / login issues' => 'other',
-    'account/login issues' => 'other',
-    'other' => 'other',
-];
+                  <div class="form-group full">
+                    <label class="form-label" for="attachment">Attachment</label>
+                    <input
+                      class="form-input"
+                      id="attachment"
+                      name="attachment"
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png,.doc"
+                    />
+                  </div>
+                </div>
 
-if (isset($category_map[strtolower($category)])) {
-    $category = $category_map[strtolower($category)];
-}
+                <div class="form-actions">
+                  <button class="btn-primary" id="submit-btn" type="submit">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14">
+                      <path d="M3 10l14-7-7 14V10H3z" />
+                    </svg>
+                    Submit Complaint
+                  </button>
+                  <a href="my-complaints.php" class="btn-outline">View My Complaints</a>
+                </div>
+              </form>
+            </div>
+          </div>
 
-if (!in_array($category, $valid_categories)) {
-    respond(false, 'Invalid complaint category.', [], 422);
-}
+          <div>
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title">Before You Submit</div>
+              </div>
+              <div class="office-item">
+                <div class="office-name">Use a clear subject</div>
+                <div class="office-addr">
+                  Keep it short enough to identify the tax issue quickly.
+                </div>
+              </div>
+              <div class="office-item">
+                <div class="office-name">Add evidence when available</div>
+                <div class="office-addr">
+                  Upload payment receipts, assessment notices, or related
+                  documents.
+                </div>
+              </div>
+              <div class="office-item">
+                <div class="office-name">Track the case after submission</div>
+                <div class="office-addr">
+                  Your complaint will appear in My Complaints once it is saved.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-// Handle file upload (optional)
-$attachment_path = null;
-if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
-    $file = $_FILES['attachment'];
-    
-    // Validate file
-    $max_size = 5 * 1024 * 1024; // 5MB
-    $allowed_types = ['application/pdf', 'image/jpeg', 'image/png', 'application/msword'];
-    
-    if ($file['size'] > $max_size) {
-        respond(false, 'File size cannot exceed 5MB.', [], 422);
-    }
-    if (!in_array($file['type'], $allowed_types)) {
-        respond(false, 'Invalid file type. Allowed: PDF, JPG, PNG, DOC.', [], 422);
-    }
-    
-    // Create upload directory if it doesn't exist
-    $upload_dir = __DIR__ . '/../uploads/complaints/';
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0755, true);
-    }
-    
-    // Generate unique filename
-    $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $filename = 'complaint_' . $taxpayer_id . '_' . time() . '.' . $file_extension;
-    $file_path = $upload_dir . $filename;
-    
-    if (!move_uploaded_file($file['tmp_name'], $file_path)) {
-        respond(false, 'Failed to upload file.', [], 500);
-    }
-    
-    $attachment_path = 'uploads/complaints/' . $filename;
-}
+    <div class="toast" id="toast"></div>
 
-// Insert complaint into database
-try {
-    $stmt = $pdo->prepare(
-        'INSERT INTO complaints (taxpayer_id, category, subject, description, attachment_path, status, priority)
-         VALUES (?, ?, ?, ?, ?, ?, ?)'
-    );
-    $stmt->execute([
-        $taxpayer_id,
-        $category,
-        $subject,
-        $description,
-        $attachment_path,
-        'new',
-        'medium'
-    ]);
-    
-    $complaint_id = $pdo->lastInsertId();
-    
-    // Create a notification for the taxpayer
-    $notif_stmt = $pdo->prepare(
-        'INSERT INTO notifications (taxpayer_id, complaint_id, type, title, message)
-         VALUES (?, ?, ?, ?, ?)'
-    );
-    $notif_stmt->execute([
-        $taxpayer_id,
-        $complaint_id,
-        'complaint_submitted',
-        'Complaint Submitted Successfully',
-        'Your complaint has been submitted and assigned ID #' . str_pad($complaint_id, 6, '0', STR_PAD_LEFT)
-    ]);
-    
-    respond(true, 'Complaint submitted successfully!', [
-        'complaint_id' => $complaint_id,
-        'reference_id' => 'CPL-' . str_pad($complaint_id, 6, '0', STR_PAD_LEFT)
-    ]);
-} catch (Exception $e) {
-    respond(false, 'Failed to submit complaint. Please try again.', [], 500);
-}
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        loadProfile();
+        bindLogout();
+        document
+          .getElementById("complaint-form")
+          .addEventListener("submit", handleComplaintSubmit);
+      });
+
+      function loadProfile() {
+        fetch("api/get-profile.php", { credentials: "same-origin" })
+          .then(function (res) {
+            if (res.status === 401) {
+              window.location.href = "login.html";
+              return null;
+            }
+            return res.json();
+          })
+          .then(function (result) {
+            if (!result) return;
+            var profile = result.data && result.data.profile ? result.data.profile : null;
+            if (!profile) return;
+
+            var name = profile.first_name + " " + profile.last_name;
+            document.getElementById("sidebar-name").textContent = name;
+            document.getElementById("sidebar-av").textContent = initials(name);
+            var tin = document.getElementById("sidebar-tin");
+            if (tin) {
+              tin.textContent = "TIN: " + (profile.tin || "--");
+            }
+            sessionStorage.setItem("userName", name);
+            sessionStorage.setItem("userEmail", profile.email || "");
+          })
+          .catch(function () {
+            showToast("Could not load your profile.");
+          });
+      }
+
+      function handleComplaintSubmit(e) {
+        e.preventDefault();
+
+        var form = document.getElementById("complaint-form");
+        var submitBtn = document.getElementById("submit-btn");
+        var subject = document.getElementById("subject").value.trim();
+        var description = document.getElementById("description").value.trim();
+
+        if (subject.length < 5) {
+          showToast("Subject must be at least 5 characters.");
+          return;
+        }
+        if (description.length < 20) {
+          showToast("Description must be at least 20 characters.");
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting...";
+
+        fetch("api/submit-complaint.php", {
+          method: "POST",
+          credentials: "same-origin",
+          body: new FormData(form),
+        })
+          .then(function (res) {
+            return res.json().then(function (data) {
+              return { status: res.status, data: data };
+            });
+          })
+          .then(function (result) {
+            if (result.status === 401) {
+              window.location.href = "login.html";
+              return;
+            }
+
+            if (result.data.success) {
+              showToast(result.data.message || "Complaint submitted.");
+              form.reset();
+              setTimeout(function () {
+                window.location.href = "my-complaints.php";
+              }, 900);
+              return;
+            }
+
+            showToast(result.data.message || "Could not submit complaint.");
+          })
+          .catch(function () {
+            showToast("Could not reach the server. Please try again.");
+          })
+          .finally(function () {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit Complaint";
+          });
+      }
+
+      function bindLogout() {
+        var logout = document.getElementById("logout-btn");
+        if (!logout) return;
+
+        logout.addEventListener("click", function (e) {
+          e.preventDefault();
+          fetch("api/logout.php", {
+            method: "POST",
+            credentials: "same-origin",
+          });
+          sessionStorage.clear();
+          showToast("Logged out");
+          setTimeout(function () {
+            window.location.href = "index.html";
+          }, 1000);
+        });
+      }
+
+      function initials(name) {
+        return String(name || "User")
+          .split(" ")
+          .filter(Boolean)
+          .map(function (part) {
+            return part.charAt(0);
+          })
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
+      }
+
+      var toastTimer;
+      function showToast(msg) {
+        var t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+          t.classList.remove("show");
+        }, 2800);
+      }
+    </script>
+  </body>
+</html>
