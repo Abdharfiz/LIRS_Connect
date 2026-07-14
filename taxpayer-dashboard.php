@@ -57,7 +57,7 @@
                 <path d="M7 6h6M7 9h6M7 12h4" />
               </svg>
             </div>
-            <div class="stat-value" id="total-complaints">0</div>
+            <div class="stat-value" id="stat-total">0</div>
             <div class="stat-label">Total Complaints</div>
           </div>
           <div class="stat-card sc-amber">
@@ -72,7 +72,7 @@
                 <path d="M10 6v4l3 2" />
               </svg>
             </div>
-            <div class="stat-value" id="pending-complaints">0</div>
+            <div class="stat-value" id="stat-pending">0</div>
             <div class="stat-label">Pending</div>
           </div>
           <div class="stat-card sc-blue">
@@ -87,7 +87,7 @@
                 <path d="M15 15l3 3" />
               </svg>
             </div>
-            <div class="stat-value" id="review-complaints">0</div>
+            <div class="stat-value" id="stat-review">0</div>
             <div class="stat-label">Under Review</div>
           </div>
           <div class="stat-card sc-resolve">
@@ -102,7 +102,7 @@
                 <path d="m6.5 10 2.5 2.5 4.5-4.5" />
               </svg>
             </div>
-            <div class="stat-value" id="resolved-complaints">0</div>
+            <div class="stat-value" id="stat-resolved">0</div>
             <div class="stat-label">Resolved</div>
           </div>
         </div>
@@ -198,39 +198,21 @@
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody id="recent-complaints-body"></tbody>
+                <tbody id="recent-complaints-tbody"></tbody>
               </table>
             </div>
-            <div
-              id="recent-complaints-empty"
-              style="
-                display: none;
-                padding: 28px 20px;
-                text-align: center;
-                color: var(--text-muted);
-                font-size: 13px;
-              "
-            >
-              No complaints submitted yet.
+            <div id="recent-complaints-empty" style="display: none; padding: 30px; text-align: center; color: var(--text-muted); font-size: 13px">
+              You haven't submitted any complaints yet.
             </div>
           </div>
 
           <div class="panel">
             <div class="panel-head">
               <div class="panel-title">Notifications</div>
-              <span class="badge pending" id="notification-count">0 new</span>
+              <span class="badge pending" id="notif-new-badge" style="display: none">0 new</span>
             </div>
-            <div id="notifications-list"></div>
-            <div
-              id="notifications-empty"
-              style="
-                display: none;
-                padding: 28px 20px;
-                text-align: center;
-                color: var(--text-muted);
-                font-size: 13px;
-              "
-            >
+            <div id="dash-notif-list"></div>
+            <div id="dash-notif-empty" style="display: none; padding: 30px; text-align: center; color: var(--text-muted); font-size: 13px">
               No notifications yet.
             </div>
           </div>
@@ -242,17 +224,8 @@
               <div class="panel-title">Responses from LIRS Officers</div>
               <a href="my-complaints.php" class="section-link">View all →</a>
             </div>
-            <div id="responses-list"></div>
-            <div
-              id="responses-empty"
-              style="
-                display: none;
-                padding: 28px 20px;
-                text-align: center;
-                color: var(--text-muted);
-                font-size: 13px;
-              "
-            >
+            <div id="dash-responses-list"></div>
+            <div id="dash-responses-empty" style="display: none; padding: 24px 20px; text-align: center; color: var(--text-muted); font-size: 13px">
               No officer responses yet.
             </div>
             <div style="padding: 16px 20px">
@@ -289,7 +262,9 @@
               <div class="profile-fields">
                 <div class="profile-row">
                   <span class="p-label">Email Address</span>
-                  <span class="p-value" id="profile-email">--</span>
+                  <span class="p-value" id="profile-email"
+                    >--</span
+                  >
                 </div>
                 <div class="profile-row">
                   <span class="p-label">Phone Number</span>
@@ -297,8 +272,8 @@
                 </div>
                 <div class="profile-row">
                   <span class="p-label">Account Status</span>
-                  <span class="p-value"
-                    ><span class="badge resolved" id="profile-status">
+                  <span class="p-value" id="profile-status-wrap"
+                    ><span class="badge resolved" id="profile-status-badge">
                       <svg
                         viewBox="0 0 20 20"
                         fill="none"
@@ -310,7 +285,7 @@
                       >
                         <path d="m4.5 10 3.5 3.5 7.5-7.5" />
                       </svg>
-                      --</span
+                      <span id="profile-status-text">Verified</span></span
                     ></span
                   >
                 </div>
@@ -339,7 +314,7 @@
 
     <script>
       // Guard: confirm there's a real taxpayer session on the server before
-      // showing this page. Anyone not logged in gets bounced to login.html.
+      // showing this page. Anyone not logged in gets bounced to login.php.
       (function checkSession() {
         fetch("api/session.php", { credentials: "same-origin" })
           .then((res) => res.json())
@@ -349,7 +324,7 @@
               !result.data.loggedIn ||
               result.data.role !== "taxpayer"
             ) {
-              window.location.href = "login.html";
+              window.location.href = "login.php";
               return;
             }
             sessionStorage.setItem("userName", result.data.name);
@@ -357,8 +332,6 @@
             renderUser(result.data.name, result.data.email);
           })
           .catch(() => {
-            // If the backend is unreachable, don't lock the user out of a
-            // page they may have a valid session for — just log it.
             console.warn("Could not verify session with the backend.");
           });
       })();
@@ -384,10 +357,8 @@
         document.getElementById("profile-email").textContent = email;
       }
 
-      // Render immediately from sessionStorage (fast, avoids a blank flash),
-      // then checkSession() above will correct it once the server responds.
       var userName = sessionStorage.getItem("userName") || "User";
-      var userEmail = sessionStorage.getItem("userEmail") || "--";
+      var userEmail = sessionStorage.getItem("userEmail") || "user@example.com";
       renderUser(userName, userEmail);
 
       document
@@ -401,7 +372,7 @@
           sessionStorage.clear();
           showToast("Logged out successfully");
           setTimeout(function () {
-            window.location.href = "index.html";
+            window.location.href = "index.php";
           }, 1000);
         });
 
@@ -415,282 +386,192 @@
           t.classList.remove("show");
         }, 2800);
       }
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        loadDashboard();
-      });
-
-      function loadDashboard() {
-        fetch("api/get-dashboard.php", { credentials: "same-origin" })
-          .then(function (res) {
-            return res.json().then(function (data) {
-              return { status: res.status, data: data };
-            });
-          })
-          .then(function (result) {
-            if (result.status === 401) {
-              window.location.href = "login.html";
-              return;
-            }
-
-            if (!result.data.success) {
-              showToast(result.data.message || "Unable to load dashboard.");
-              return;
-            }
-
-            renderDashboard(result.data.data || {});
-          })
-          .catch(function (err) {
-            console.error("Dashboard fetch error:", err);
-            showToast("Unable to reach the server.");
-          });
-      }
-
-      function renderDashboard(data) {
-        renderUser(data.profile || {});
-        renderCounts(data.counts || {});
-        renderRecentComplaints(data.recent_complaints || []);
-        renderNotifications(data.notifications || [], data.unread_count || 0);
-        renderResponses(data.responses || []);
-      }
-
-      function renderUser(profile, emailFromSession) {
-        if (typeof profile === "string") {
-          profile = {
-            name: profile,
-            email: emailFromSession,
-            tin: sessionStorage.getItem("userTin") || "--",
-            phone: "--",
-            status: "--",
-          };
-        }
-
-        var name = profile.name || "User";
-        var email = profile.email || "--";
-        var phone = profile.phone || "--";
-        var tin = profile.tin || "--";
-        var status = profile.status || "--";
-        var ini = initials(name);
-
-        sessionStorage.setItem("userName", name);
-        sessionStorage.setItem("userEmail", email);
-        sessionStorage.setItem("userTin", tin);
-
-        setText("welcome-name", name);
-        setText("sidebar-name", name);
-        setText("sidebar-av", ini);
-        setText("sidebar-tin", "TIN: " + tin);
-        setText("profile-av", ini);
-        setText("profile-name", name);
-        setText("profile-tin", "TIN: " + tin);
-        setText("profile-email", email);
-        setText("profile-phone", phone);
-
-        var statusBadge = document.getElementById("profile-status");
-        if (statusBadge) {
-          statusBadge.textContent = toTitleCase(status);
-          statusBadge.className =
-            "badge " + (String(status).toLowerCase() === "active" ? "resolved" : "pending");
-        }
-      }
-
-      function renderCounts(counts) {
-        setText("total-complaints", counts.total || 0);
-        setText("pending-complaints", counts.pending || 0);
-        setText("review-complaints", counts.under_review || 0);
-        setText("resolved-complaints", counts.resolved || 0);
-      }
-
-      function renderRecentComplaints(complaints) {
-        var tbody = document.getElementById("recent-complaints-body");
-        var empty = document.getElementById("recent-complaints-empty");
-        tbody.innerHTML = "";
-
-        if (!complaints.length) {
-          empty.style.display = "";
-          return;
-        }
-
-        empty.style.display = "none";
-        complaints.forEach(function (complaint) {
-          var row = document.createElement("tr");
-
-          var idCell = document.createElement("td");
-          var cid = document.createElement("span");
-          cid.className = "cid";
-          cid.textContent = complaint.reference_id;
-          idCell.appendChild(cid);
-          row.appendChild(idCell);
-
-          appendTextCell(row, complaint.subject);
-          appendTextCell(row, complaint.created_at_label || formatDate(complaint.created_at));
-
-          var statusCell = document.createElement("td");
-          var badge = document.createElement("span");
-          badge.className = "badge " + statusClass(complaint.status);
-          badge.textContent = complaint.status;
-          statusCell.appendChild(badge);
-          row.appendChild(statusCell);
-
-          var actionCell = document.createElement("td");
-          var button = document.createElement("button");
-          var isResolved = complaint.status === "Resolved";
-          button.className = "act-btn " + (isResolved ? "respond" : "view");
-          button.textContent = isResolved ? "View Response" : "View";
-          button.addEventListener("click", function () {
-            window.location.href = "complaint-detail.php?id=" + encodeURIComponent(complaint.id);
-          });
-          actionCell.appendChild(button);
-          row.appendChild(actionCell);
-
-          tbody.appendChild(row);
-        });
-      }
-
-      function renderNotifications(notifications, unreadCount) {
-        var list = document.getElementById("notifications-list");
-        var empty = document.getElementById("notifications-empty");
-        var countText = unreadCount === 1 ? "1 new" : unreadCount + " new";
-        setText("notification-count", countText);
-        list.innerHTML = "";
-
-        if (!notifications.length) {
-          empty.style.display = "";
-          return;
-        }
-
-        empty.style.display = "none";
-        notifications.forEach(function (notification) {
-          var item = document.createElement("div");
-          item.className = "notif-item" + (!notification.is_read ? " unread" : "");
-          item.addEventListener("click", function () {
-            if (notification.complaint_id) {
-              window.location.href =
-                "complaint-detail.php?id=" + encodeURIComponent(notification.complaint_id);
-              return;
-            }
-            showToast("No complaint linked to this notification.");
-          });
-
-          var dot = document.createElement("div");
-          dot.className = "n-dot " + notificationDotClass(notification.type);
-          item.appendChild(dot);
-
-          var body = document.createElement("div");
-          var text = document.createElement("div");
-          text.className = "n-text";
-          text.textContent = notification.message || notification.title || "Notification";
-          var time = document.createElement("div");
-          time.className = "n-time";
-          time.textContent = notification.time_ago || notification.created_at_label || "";
-          body.appendChild(text);
-          body.appendChild(time);
-          item.appendChild(body);
-
-          list.appendChild(item);
-        });
-      }
-
-      function renderResponses(responses) {
-        var list = document.getElementById("responses-list");
-        var empty = document.getElementById("responses-empty");
-        list.innerHTML = "";
-
-        if (!responses.length) {
-          empty.style.display = "";
-          return;
-        }
-
-        empty.style.display = "none";
-        responses.forEach(function (response) {
-          var item = document.createElement("div");
-          item.className = "response-item";
-          item.addEventListener("click", function () {
-            window.location.href =
-              "complaint-detail.php?id=" + encodeURIComponent(response.complaint_id);
-          });
-
-          var meta = document.createElement("div");
-          meta.className = "resp-meta";
-          var cid = document.createElement("span");
-          cid.className = "resp-cid";
-          cid.textContent = response.reference_id;
-          var date = document.createElement("span");
-          date.className = "resp-date";
-          date.textContent = response.created_at_label || formatDate(response.created_at);
-          meta.appendChild(cid);
-          meta.appendChild(date);
-
-          var subject = document.createElement("div");
-          subject.className = "resp-subject";
-          subject.textContent = response.subject + " - " + response.status;
-
-          var preview = document.createElement("div");
-          preview.className = "resp-preview";
-          preview.textContent = trimText(response.message, 150);
-
-          item.appendChild(meta);
-          item.appendChild(subject);
-          item.appendChild(preview);
-          list.appendChild(item);
-        });
-      }
-
-      function appendTextCell(row, value) {
-        var cell = document.createElement("td");
-        cell.textContent = value || "--";
-        row.appendChild(cell);
-      }
-
-      function setText(id, value) {
-        var element = document.getElementById(id);
-        if (element) {
-          element.textContent = value;
-        }
-      }
-
-      function statusClass(status) {
-        var normalized = String(status || "").toLowerCase();
-        if (normalized === "new" || normalized === "pending") return "pending";
-        if (normalized === "under review") return "review";
-        if (normalized === "resolved") return "resolved";
-        if (normalized === "rejected") return "rejected";
-        if (normalized === "closed") return "closed";
-        return "pending";
-      }
-
-      function notificationDotClass(type) {
-        var normalized = String(type || "").toLowerCase();
-        if (normalized.indexOf("response") !== -1) return "green";
-        if (normalized.indexOf("status") !== -1) return "blue";
-        return "amber";
-      }
 
       function formatDate(dateStr) {
-        if (!dateStr) return "--";
         var d = new Date(dateStr);
-        if (Number.isNaN(d.getTime())) return "--";
         var day = String(d.getDate()).padStart(2, "0");
         var month = String(d.getMonth() + 1).padStart(2, "0");
         var year = d.getFullYear();
         return day + "/" + month + "/" + year;
       }
 
-      function toTitleCase(value) {
-        return String(value || "--").replace(/\w\S*/g, function (text) {
-          return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+      function statusBadgeClass(status) {
+        var s = (status || "").toLowerCase();
+        if (s === "resolved") return "resolved";
+        if (s === "under review" || s === "in review") return "review";
+        return "pending";
+      }
+
+      // ---- Profile card (real name/email/TIN/phone/status) ----
+      function loadProfileCard() {
+        fetch("api/get-profile.php", { credentials: "same-origin" })
+          .then(function (res) { return res.json(); })
+          .then(function (result) {
+            if (!result.success) return;
+            var p = result.data.profile;
+            document.getElementById("profile-tin").textContent = "TIN: " + (p.tin || "--");
+            document.getElementById("profile-phone").textContent = p.phone || "--";
+            var isActive = p.status === "active";
+            document.getElementById("profile-status-badge").className =
+              "badge " + (isActive ? "resolved" : "pending");
+            document.getElementById("profile-status-text").textContent =
+              isActive ? "Verified" : "Inactive";
+          })
+          .catch(function () {
+            /* leave placeholders if this fails — not critical to page load */
+          });
+      }
+
+      // ---- Complaint stats + Recent Complaints table + Responses panel ----
+      function loadComplaints() {
+        fetch("api/get-complaints.php?per_page=50", { credentials: "same-origin" })
+          .then(function (res) { return res.json(); })
+          .then(function (result) {
+            if (!result.success) return;
+            var complaints = result.data.complaints || [];
+            renderStats(complaints);
+            renderRecentComplaints(complaints.slice(0, 3));
+          })
+          .catch(function () {
+            document.getElementById("recent-complaints-empty").style.display = "";
+          });
+      }
+
+      function renderStats(complaints) {
+        var total = complaints.length;
+        var pending = 0, review = 0, resolved = 0;
+        complaints.forEach(function (c) {
+          var s = (c.status || "").toLowerCase();
+          if (s === "new" || s === "pending") pending++;
+          else if (s === "under review" || s === "in review" || s === "escalated") review++;
+          else if (s === "resolved" || s === "closed") resolved++;
+        });
+        document.getElementById("stat-total").textContent = total;
+        document.getElementById("stat-pending").textContent = pending;
+        document.getElementById("stat-review").textContent = review;
+        document.getElementById("stat-resolved").textContent = resolved;
+      }
+
+      function renderRecentComplaints(complaints) {
+        var tbody = document.getElementById("recent-complaints-tbody");
+        tbody.innerHTML = "";
+
+        if (!complaints.length) {
+          document.getElementById("recent-complaints-empty").style.display = "";
+          return;
+        }
+        document.getElementById("recent-complaints-empty").style.display = "none";
+
+        complaints.forEach(function (c) {
+          var row = document.createElement("tr");
+          var actionText = c.status === "Resolved" ? "View Response" : "View";
+          var actionClass = c.status === "Resolved" ? "respond" : "view";
+          row.innerHTML =
+            '<td><span class="cid"></span></td>' +
+            "<td></td><td></td>" +
+            '<td><span class="badge ' + statusBadgeClass(c.status) + '"></span></td>' +
+            '<td><button class="act-btn ' + actionClass + '"></button></td>';
+          row.children[0].querySelector(".cid").textContent = c.reference_id;
+          row.children[1].textContent = c.subject;
+          row.children[2].textContent = formatDate(c.created_at);
+          row.children[3].querySelector(".badge").textContent = c.status;
+          var btn = row.children[4].querySelector("button");
+          btn.textContent = actionText;
+          btn.addEventListener("click", function () {
+            window.location.href = "complaint-detail.php?id=" + c.id;
+          });
+          tbody.appendChild(row);
         });
       }
 
-      function trimText(value, limit) {
-        var text = String(value || "");
-        if (text.length <= limit) {
-          return text;
-        }
-        return text.slice(0, limit - 3) + "...";
+      // ---- Notifications panel ----
+      function loadNotifications() {
+        fetch("api/get-notifications.php?limit=3", { credentials: "same-origin" })
+          .then(function (res) { return res.json(); })
+          .then(function (result) {
+            if (!result.success) return;
+            var notifs = result.data.notifications || [];
+            var unread = result.data.unread_count || 0;
+
+            var badge = document.getElementById("notif-new-badge");
+            if (unread > 0) {
+              badge.textContent = unread + " new";
+              badge.style.display = "";
+            }
+
+            var list = document.getElementById("dash-notif-list");
+            list.innerHTML = "";
+            if (!notifs.length) {
+              document.getElementById("dash-notif-empty").style.display = "";
+              return;
+            }
+            document.getElementById("dash-notif-empty").style.display = "none";
+
+            var dotColors = ["blue", "green", "amber"];
+            notifs.forEach(function (n, i) {
+              var div = document.createElement("div");
+              div.className = "notif-item" + (n.is_read ? "" : " unread");
+              div.innerHTML =
+                '<div class="n-dot ' + dotColors[i % dotColors.length] + '"></div>' +
+                "<div><div class=\"n-text\"></div><div class=\"n-time\"></div></div>";
+              div.querySelector(".n-text").textContent = n.title;
+              div.querySelector(".n-time").textContent = n.time_ago || n.created_at;
+              if (n.complaint_id) {
+                div.addEventListener("click", function () {
+                  window.location.href = "complaint-detail.php?id=" + n.complaint_id;
+                });
+              }
+              list.appendChild(div);
+            });
+          })
+          .catch(function () {
+            document.getElementById("dash-notif-empty").style.display = "";
+          });
       }
+
+      // ---- Officer responses panel (pulled from resolved/in-progress complaints) ----
+      function loadResponses() {
+        fetch("api/get-complaints.php?per_page=50", { credentials: "same-origin" })
+          .then(function (res) { return res.json(); })
+          .then(function (result) {
+            if (!result.success) return;
+            var complaints = (result.data.complaints || []).filter(function (c) {
+              var s = (c.status || "").toLowerCase();
+              return s === "resolved" || s === "under review" || s === "in review";
+            }).slice(0, 2);
+
+            var list = document.getElementById("dash-responses-list");
+            list.innerHTML = "";
+            if (!complaints.length) {
+              document.getElementById("dash-responses-empty").style.display = "";
+              return;
+            }
+            document.getElementById("dash-responses-empty").style.display = "none";
+
+            complaints.forEach(function (c) {
+              var div = document.createElement("div");
+              div.className = "response-item";
+              div.innerHTML =
+                '<div class="resp-meta"><span class="resp-cid"></span><span class="resp-date"></span></div>' +
+                '<div class="resp-subject"></div>';
+              div.querySelector(".resp-cid").textContent = c.reference_id;
+              div.querySelector(".resp-date").textContent = formatDate(c.updated_at || c.created_at);
+              div.querySelector(".resp-subject").textContent = c.subject + " — " + c.status;
+              div.addEventListener("click", function () {
+                window.location.href = "complaint-detail.php?id=" + c.id;
+              });
+              list.appendChild(div);
+            });
+          })
+          .catch(function () {
+            document.getElementById("dash-responses-empty").style.display = "";
+          });
+      }
+
+      loadProfileCard();
+      loadComplaints();
+      loadNotifications();
+      loadResponses();
     </script>
   </body>
 </html>
-

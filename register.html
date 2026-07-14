@@ -18,7 +18,7 @@
         <span class="logo-text">LIRS<span>Connect</span></span>
       </a>
       <div class="nav-right">
-        Already have an account? <a href="login.html">Login</a>
+        Already have an account? <a href="login.php">Login</a>
       </div>
     </nav>
 
@@ -419,7 +419,7 @@
 
           if (result.success) {
             showAlert(result.message + " Redirecting to login…", "success");
-            setTimeout(() => (window.location.href = "login.html"), 1500);
+            setTimeout(() => (window.location.href = "login.php"), 1500);
           } else {
             showAlert(result.message || "Registration failed.", "error");
           }

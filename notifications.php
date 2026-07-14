@@ -383,7 +383,7 @@
           })
           .then(function (result) {
             if (result.status === 401) {
-              window.location.href = "login.html";
+              window.location.href = "login.php";
               return;
             }
             if (!result.data.success) {

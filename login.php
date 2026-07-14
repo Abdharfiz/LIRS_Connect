@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LIRS Connect | Login</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --green: #10b981;
+        --green-dark: #097e59;
+        --green-deep: #0b5943;
+        --white: #fbf5f5;
+        --off-white: #f8faf9;
+        --text-dark: #0f2419;
+        --text-muted: #6b7a72;
+        --border: #e2ebe6;
+        --error: #ef4444;
+        --blue: #1a5c9a;
+        --blue-light: #e8f1fb;
+        --blue-border: #c5d9f0;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--white);
+        color: var(--text-dark);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── NAVBAR ────────────────────────────────────────── */
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        background: white;
+        border-bottom: 1px solid var(--border);
+        padding: 0 60px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 12px rgba(16, 185, 129, 0.06);
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+      .logo-icon {
+        width: 34px;
+        height: 34px;
+        background: var(--green);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "DM Serif Display", serif;
+        color: var(--white);
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .logo-text {
+        font-family: "DM Serif Display", serif;
+        font-size: 20px;
+        color: var(--text-dark);
+      }
+      .logo-text span {
+        color: var(--green);
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+      .nav-right a {
+        font-weight: 600;
+        color: var(--green);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .nav-right a:hover {
+        color: var(--green-dark);
+      }
+
+      /* ── PAGE WRAPPER ──────────────────────────────────── */
+      .page-wrapper {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* ── CARD ──────────────────────────────────────────── */
+      .card {
+        background: rgb(244, 246, 244);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 52px 48px;
+        width: 100%;
+        max-width: 480px;
+        position: relative;
+        z-index: 1;
+        box-shadow:
+          0 8px 48px rgba(16, 185, 129, 0.09),
+          0 2px 12px rgba(0, 0, 0, 0.04);
+        animation: fadeUp 0.7s ease both;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--green), #34d399);
+        border-radius: 24px 24px 0 0;
+      }
+
+      /* Active blue border for Admin */
+      .card.admin-view::before {
+        background: linear-gradient(90deg, var(--green), #689470);
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .card-header {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+      .card-icon {
+        width: 64px;
+        height: 64px;
+        background: rgba(40, 42, 41, 0.1);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin: 0 auto 22px;
+      }
+      .card-header h1 {
+        font-family: "DM Serif Display", serif;
+        font-size: 30px;
+        color: var(--text-dark);
+        margin-bottom: 8px;
+      }
+      .card-header p {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      /* ── ROLE TOGGLE ───────────────────────────────────── */
+      .role-toggle {
+        display: flex;
+        background: #f0f4f2;
+        border-radius: 10px;
+        padding: 4px;
+        margin-bottom: 16px;
+        gap: 4px;
+      }
+      .role-btn {
+        flex: 1;
+        padding: 9px 12px;
+        border: none;
+        border-radius: 7px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        background: transparent;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: all 0.2s;
+      }
+      .role-btn.active {
+        background: var(--white);
+        color: var(--text-dark);
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+      }
+      /* Special toggle look for Admin */
+      .role-btn.admin-active.active {
+        background: var(--green-deep);
+        color: #fff;
+      }
+
+      /* ── ROLE INDICATOR ────────────────────────────────── */
+      .role-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .role-indicator.taxpayer {
+        background: #d6efe3;
+        color: #145c3e;
+      }
+      .role-indicator.admin {
+        background: #dde6e2;
+        color: var(--green-deep);
+      }
+
+      .role-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .role-indicator.taxpayer .role-dot {
+        background: var(--green);
+      }
+      .role-indicator.admin .role-dot {
+        background: var(--green-deep);
+      }
+
+      /* ── FORM & INPUTS ─────────────────────────────────── */
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 7px;
+      }
+      .input-wrap {
+        position: relative;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 13px 14px 13px 20px; /* Adjusted text padding */
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--text-dark);
+        background: var(--white);
+        outline: none;
+      }
+      .form-group input:focus {
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+      .admin-view .form-group input:focus {
+        border-color: var(--green-deep);
+        box-shadow: 0 0 0 3px rgba(26, 92, 154, 0.1);
+      }
+
+      /* Password visibility toggle */
+      .toggle-pw {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        color: var(--text-muted);
+      }
+      .toggle-pw svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .forgot-row {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: -10px;
+        margin-bottom: 20px;
+      }
+      .forgot-row a {
+        font-size: 13px;
+        color: var(--green);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .admin-view .forgot-row a {
+        color: var(--green);
+      }
+
+      .remember-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 26px;
+      }
+      .remember-row input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--green);
+      }
+      .admin-view .remember-row input {
+        accent-color: var(--green-deep);
+      }
+      .remember-row label {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      /* ── BUTTONS ───────────────────────────────────────── */
+      .btn-submit {
+        width: 100%;
+        padding: 15px;
+        background: var(--green);
+        color: var(--white);
+        border: none;
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.2s;
+      }
+      .btn-submit:hover {
+        background: var(--green-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+      }
+
+      /* Admin variant button color */
+      .btn-submit.admin-btn {
+        background: var(--green-deep);
+      }
+      .btn-submit.admin-btn:hover {
+        background: #0a4a3a;
+        box-shadow: 0 8px 24px rgba(11, 89, 67, 0.3);
+      }
+
+      .alert {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 20px;
+      }
+      .alert.error {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #b91c1c;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">TT</div>
+        <span class="logo-text">LIRS<span>Connect</span></span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-right">
+          Don't have an account?
+          <a href="register.html">Register here</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="page-wrapper">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" id="card-icon">
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="var(--text-dark)"
+              stroke-width="1.4"
+              width="26"
+              height="26"
+            >
+              <circle cx="10" cy="7" r="3.5" />
+              <path d="M3 17c0-3.3 3.1-6 7-6s7 2.7 7 6" />
+            </svg>
+          </div>
+          <h1 id="card-title">Welcome Back</h1>
+          <p>Login to your account to manage and track your activities.</p>
+        </div>
+
+        <!-- Toggles -->
+        <div class="role-toggle">
+          <button type="button" class="role-btn active" id="btn-taxpayer">
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              width="14"
+              height="14"
+            >
+              <circle cx="10" cy="7" r="3.5" />
+              <path d="M3 17c0-3.3 3.1-6 7-6s7 2.7 7 6" />
+            </svg>
+            Taxpayer
+          </button>
+          <button type="button" class="role-btn admin-active" id="btn-admin">
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              width="14"
+              height="14"
+            >
+              <path
+                d="M10 2.5l6 2.2v4.6c0 4.1-2.6 6.9-6 8.2-3.4-1.3-6-4.1-6-8.2V4.7L10 2.5z"
+              />
+              <path d="M7.3 10l2 2 3.4-3.6" />
+            </svg>
+            Admin
+          </button>
+        </div>
+
+        <div class="role-indicator taxpayer" id="role-indicator">
+          <div class="role-dot"></div>
+          <span id="role-label">Logging in as: Taxpayer</span>
+        </div>
+
+        <div class="alert error" id="login-alert">
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            width="15"
+            height="15"
+            style="flex-shrink: 0"
+          >
+            <path d="M10 3.5 18 16.5H2Z" stroke-linejoin="round" />
+            <path d="M10 8v4M10 14h.01" />
+          </svg>
+          <span id="alert-msg">Invalid credentials.</span>
+        </div>
+
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-wrap">
+              <input
+                type="email"
+                id="email"
+                placeholder="john@example.com"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group" id="payid-group">
+            <label for="PayID">PayID (optional)</label>
+            <div class="input-wrap">
+              <input type="text" id="PayID" placeholder="N-123456" />
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+              <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                required
+              />
+              <button type="button" class="toggle-pw" onclick="togglePw(this)">
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <path
+                    d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10z"
+                  />
+                  <circle cx="10" cy="10" r="2.3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="forgot-row"><a href="#">Forgot password?</a></div>
+          <div class="remember-row">
+            <input type="checkbox" id="remember" />
+            <label for="remember">Keep me logged in</label>
+          </div>
+
+          <button type="submit" class="btn-submit" id="login-btn">
+            <span class="btn-text" id="btn-label">Login to Account →</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      let currentRole = "taxpayer";
+
+      document
+        .getElementById("btn-taxpayer")
+        .addEventListener("click", function () {
+          setRole("taxpayer");
+        });
+      document
+        .getElementById("btn-admin")
+        .addEventListener("click", function () {
+          setRole("admin");
+        });
+
+      function setRole(role) {
+        currentRole = role;
+        const isAdmin = role === "admin";
+
+        // Toggle card views & active button styles
+        document.querySelector(".card").classList.toggle("admin-view", isAdmin);
+        document
+          .getElementById("btn-taxpayer")
+          .classList.toggle("active", !isAdmin);
+        document
+          .getElementById("btn-admin")
+          .classList.toggle("active", isAdmin);
+
+        // Update strip indicators
+        const indicator = document.getElementById("role-indicator");
+        if (indicator) indicator.className = "role-indicator " + role;
+        document.getElementById("role-label").textContent = isAdmin
+          ? "Logging in as: Admin"
+          : "Logging in as: Taxpayer";
+
+        // Toggle form parameters
+        document.getElementById("payid-group").style.display = isAdmin
+          ? "none"
+          : "block";
+        if (isAdmin) {
+          document.getElementById("PayID").removeAttribute("required");
+        } else {
+          document.getElementById("PayID").setAttribute("required", "required");
+        }
+
+        // Update text headers & icon graphics
+        document.getElementById("card-icon").innerHTML = isAdmin
+          ? '<svg viewBox="0 0 20 20" fill="none" stroke="var(--text-dark)" stroke-width="1.3" width="26" height="26"><path d="M10 2.5l6 2.2v4.6c0 4.1-2.6 6.9-6 8.2-3.4-1.3-6-4.1-6-8.2V4.7L10 2.5z"/><path d="M7.3 10l2 2 3.4-3.6"/></svg>'
+          : '<svg viewBox="0 0 20 20" fill="none" stroke="var(--text-dark)" stroke-width="1.4" width="26" height="26"><circle cx="10" cy="7" r="3.5"/><path d="M3 17c0-3.3 3.1-6 7-6s7 2.7 7 6"/></svg>';
+        document.getElementById("card-title").textContent = isAdmin
+          ? "Admin Login"
+          : "Welcome Back";
+        document.getElementById("btn-label").textContent = isAdmin
+          ? "Login as Admin →"
+          : "Login to Account →";
+        document.getElementById("email").placeholder = isAdmin
+          ? "admin@example.com"
+          : "john@example.com";
+
+        // FORCE THE SUBMIT BUTTON COLOR CHANGE
+        const loginBtn = document.getElementById("login-btn");
+        if (isAdmin) {
+          loginBtn.classList.add("admin-btn");
+        } else {
+          loginBtn.classList.remove("admin-btn");
+        }
+
+        document.getElementById("login-alert").style.display = "none";
+      }
+
+      async function handleLogin(e) {
+        e.preventDefault();
+        const email = document
+          .getElementById("email")
+          .value.trim()
+          .toLowerCase();
+        const password = document.getElementById("password").value;
+        const alertBox = document.getElementById("login-alert");
+        const alertMsg = document.getElementById("alert-msg");
+        const submitBtn = document.getElementById("login-btn");
+        const btnLabel = document.getElementById("btn-label");
+
+        alertBox.style.display = "none";
+        submitBtn.disabled = true;
+        const originalLabel = btnLabel.textContent;
+        btnLabel.textContent = "Signing in…";
+
+        try {
+          if (currentRole === "admin") {
+            const res = await fetch("api/admin-login.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "same-origin",
+              body: JSON.stringify({ email, password }),
+            });
+            const result = await res.json();
+
+            if (result.success) {
+              sessionStorage.setItem("userRole", "admin");
+              sessionStorage.setItem("userName", result.data.name);
+              sessionStorage.setItem("userEmail", result.data.email);
+              window.location.href = "admin/admin-dashboard.php";
+            } else {
+              alertMsg.textContent =
+                result.message || "Invalid admin email or password.";
+              alertBox.style.display = "flex";
+            }
+          } else {
+            const payID = document.getElementById("PayID").value.trim();
+            const res = await fetch("api/login.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "same-origin",
+              body: JSON.stringify({ email, PayID: payID, password }),
+            });
+            const result = await res.json();
+
+            if (result.success) {
+              sessionStorage.setItem("userRole", "taxpayer");
+              sessionStorage.setItem("userName", result.data.name);
+              sessionStorage.setItem("userEmail", result.data.email);
+              sessionStorage.setItem("payID", result.data.payId);
+              window.location.href = "taxpayer-dashboard.php";
+            } else {
+              alertMsg.textContent =
+                result.message || "Invalid credentials or missing PayID.";
+              alertBox.style.display = "flex";
+            }
+          }
+        } catch (err) {
+          alertMsg.textContent =
+            "Could not reach the server. Is the backend running?";
+          alertBox.style.display = "flex";
+        } finally {
+          submitBtn.disabled = false;
+          btnLabel.textContent = originalLabel;
+        }
+      }
+
+      function togglePw(btn) {
+        const input = btn.closest(".input-wrap").querySelector("input");
+        input.type = input.type === "password" ? "text" : "password";
+        btn.innerHTML =
+          input.type === "password"
+            ? '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10z"/><circle cx="10" cy="10" r="2.3"/></svg>'
+            : '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 10s3-5.5 8-5.5S18 10 18 10s-3 5.5-8 5.5S2 10 2 10z"/><circle cx="10" cy="10" r="2.3"/><path d="M3 3l14 14"/></svg>';
+      }
+    </script>
+  </body>
+</html>

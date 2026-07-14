@@ -155,7 +155,7 @@
         fetch("api/get-profile.php", { credentials: "same-origin" })
           .then(function (res) {
             if (res.status === 401) {
-              window.location.href = "login.html";
+              window.location.href = "login.php";
               return null;
             }
             return res.json();
@@ -212,7 +212,7 @@
           })
           .then(function (result) {
             if (result.status === 401) {
-              window.location.href = "login.html";
+              window.location.href = "login.php";
               return;
             }
 

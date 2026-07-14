@@ -60,7 +60,7 @@
                 <div class="timeline" id="timeline"></div>
               </div>
 
-              <div class="panel" id="response-panel" style="display: none">
+              <div class="panel" id="response-panel" >
                 <div class="panel-head">
                   <div class="panel-title">Response from LIRS Officer</div>
                 </div>
@@ -274,13 +274,29 @@
           tl.appendChild(item);
         });
 
-        // Show response if available
+        // Show all responses if available
         if (responses && responses.length > 0) {
           document.getElementById("response-panel").style.display = "";
-          var resp = responses[0];
-          document.getElementById("resp-officer").textContent = resp.admin_name || "LIRS Officer";
-          document.getElementById("resp-date").textContent = formatDate(resp.created_at);
-          document.getElementById("resp-body").textContent = resp.message;
+
+          var panel = document.getElementById("response-panel");
+          
+          panel.querySelectorAll('.response-item').forEach(function (el) {
+            if (!el.dataset || el.dataset.keep !== 'true') el.remove();
+          });
+
+          responses.forEach(function (resp) {
+            var item = document.createElement('div');
+            item.className = 'response-item';
+            item.style.cursor = 'default';
+            item.innerHTML =
+              '<div class="resp-meta">' +
+                '<span class="resp-cid">' + (resp.admin_name || 'LIRS Officer') + '</span>' +
+                '<span class="resp-date">' + formatDate(resp.created_at) + '</span>' +
+              '</div>' +
+              '<div class="resp-preview">' + (resp.message || '') + '</div>';
+
+            panel.appendChild(item);
+          });
         }
       }
 

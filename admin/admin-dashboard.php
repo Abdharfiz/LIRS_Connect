@@ -8,10 +8,10 @@
       href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="../app.css" />
   </head>
   <body>
-    <!-- SIDEBAR -->    <?php include 'includes/sidebar.php'; ?>
+    <!-- SIDEBAR -->    <?php include '../includes/admin-sidebar.php'; ?>
 
     <!-- MAIN -->
     <div class="main">
@@ -441,7 +441,8 @@
                   <tr>
                     <th>Complaint ID</th>
                     <th>Taxpayer</th>
-                    <th>TIN</th>
+                    <th>PayID</th>
+
                     <th>Category</th>
                     <th>Priority</th>
                     <th>Assigned To</th>
@@ -1536,62 +1537,13 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
     </div>
     <!-- /main -->
 
+    <script src="../admin-common.js"></script>
     <script>
-      // Guard: confirm there's a real admin session on the server before
-      // showing this page. Anyone not logged in as admin gets bounced.
-      (function checkSession() {
-        fetch("api/session.php", { credentials: "same-origin" })
-          .then((res) => res.json())
-          .then((result) => {
-            const isAdminRole =
-              result.data &&
-              result.data.loggedIn &&
-              (result.data.role === "super_admin" ||
-                result.data.role === "officer");
-            if (!isAdminRole) {
-              window.location.href = "login.php";
-              return;
-            }
-            sessionStorage.setItem("adminName", result.data.name);
-            sessionStorage.setItem("adminEmail", result.data.email);
-            document.getElementById("admin-name").textContent =
-              result.data.name;
-            document.getElementById("admin-avatar").textContent = initials(
-              result.data.name,
-            );
-            document.querySelector(".admin-role").textContent =
-              result.data.role === "super_admin" ? "Super Admin" : "Officer";
-          })
-          .catch(() => {
-            console.warn("Could not verify session with the backend.");
-          });
-      })();
+      adminInit();
 
-      var adminName = sessionStorage.getItem("adminName") || "Amaka Adeyemi";
       function initials(n) {
-        return n
-          .split(" ")
-          .map(function (w) {
-            return w[0];
-          })
-          .join("")
-          .toUpperCase()
-          .slice(0, 2);
+        return adminInitials(n);
       }
-      document.getElementById("admin-name").textContent = adminName;
-      document.getElementById("admin-avatar").textContent = initials(adminName);
-
-      document
-        .getElementById("logout-btn")
-        .addEventListener("click", function (e) {
-          e.preventDefault();
-          fetch("api/logout.php", {
-            method: "POST",
-            credentials: "same-origin",
-          });
-          sessionStorage.clear();
-          window.location.href = "index.php";
-        });
 
       const titles = {
         dashboard: "Dashboard",
@@ -1653,6 +1605,3 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
     </script>
   </body>
 </html>
-
-
-

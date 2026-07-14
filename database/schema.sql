@@ -8,7 +8,7 @@ CREATE DATABASE IF NOT EXISTS lirs_connect CHARACTER SET utf8mb4 COLLATE utf8mb4
 USE lirs_connect;
 
 -- ---------------------------------------------------
--- Taxpayers (regular users who log in via login.html)
+-- Taxpayers (regular users who log in via login.php)
 -- ---------------------------------------------------
 CREATE TABLE IF NOT EXISTS taxpayers (
     id            INT AUTO_INCREMENT PRIMARY KEY,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS taxpayers (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------
--- Admins / Officers (log in via admin-login.html)
+-- Admins / Officers (log in via admin-login.php)
 -- ---------------------------------------------------
 CREATE TABLE IF NOT EXISTS admins (
     id            INT AUTO_INCREMENT PRIMARY KEY,
@@ -38,11 +38,6 @@ CREATE TABLE IF NOT EXISTS admins (
     created_at    TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- NOTE: The admin account that was hardcoded in the old frontend JS
--- (admin@example.com) is NOT inserted here, because passwords must be
--- hashed with PHP's password_hash(), not typed as SQL.
--- After importing this schema, run database/seed_admins.php ONCE in the
--- browser (or `php seed_admins.php` in a terminal) to create it safely.
 
 -- ---------------------------------------------------
 -- Complaints (submitted by taxpayers)
