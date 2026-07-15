@@ -64,7 +64,7 @@ body {
 .logo-text {
   font-family: "DM Serif Display", serif;
   font-size: 20px;
-  color: var(--green);
+  color: black;
 }
 .logo-text span {
   color: var(--green);
