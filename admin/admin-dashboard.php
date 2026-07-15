@@ -8,10 +8,10 @@
       href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="../app.css" />
   </head>
   <body>
-    <!-- SIDEBAR -->    <?php include 'includes/sidebar.php'; ?>
+    <!-- SIDEBAR -->    <?php include '../includes/admin-sidebar.php'; ?>
 
     <!-- MAIN -->
     <div class="main">
@@ -66,9 +66,9 @@
                   <path d="M7 6h6M7 9h6M7 12h4" />
                 </svg>
               </div>
-              <div class="kpi-value">1,284</div>
+              <div class="kpi-value" id="kpi-total">0</div>
               <div class="kpi-label">Total Complaints</div>
-              <div class="kpi-delta delta-up">▲ 8.4% this month</div>
+              <div class="kpi-delta" id="kpi-total-sub">&nbsp;</div>
             </div>
             <div class="kpi-card c-amber">
               <div class="kpi-icon">
@@ -82,9 +82,9 @@
                   <path d="M10 6v4l3 2" />
                 </svg>
               </div>
-              <div class="kpi-value">342</div>
-              <div class="kpi-label">Open / Pending</div>
-              <div class="kpi-delta delta-down">▼ 12 from yesterday</div>
+              <div class="kpi-value" id="kpi-open">0</div>
+              <div class="kpi-label">New / In Progress</div>
+              <div class="kpi-delta" id="kpi-open-sub">&nbsp;</div>
             </div>
             <div class="kpi-card c-green">
               <div class="kpi-icon">
@@ -98,9 +98,9 @@
                   <path d="m6.5 10 2.5 2.5 4.5-4.5" />
                 </svg>
               </div>
-              <div class="kpi-value">879</div>
+              <div class="kpi-value" id="kpi-resolved">0</div>
               <div class="kpi-label">Resolved</div>
-              <div class="kpi-delta delta-up">▲ 68.5% resolution rate</div>
+              <div class="kpi-delta delta-up" id="kpi-resolved-sub">&nbsp;</div>
             </div>
             <div class="kpi-card c-red">
               <div class="kpi-icon">
@@ -114,9 +114,9 @@
                   <path d="M10 8v4M10 14h.01" />
                 </svg>
               </div>
-              <div class="kpi-value">63</div>
-              <div class="kpi-label">Urgent / Escalated</div>
-              <div class="kpi-delta delta-down">▼ 5 resolved today</div>
+              <div class="kpi-value" id="kpi-highpriority">0</div>
+              <div class="kpi-label">High Priority</div>
+              <div class="kpi-delta" id="kpi-highpriority-sub">&nbsp;</div>
             </div>
           </div>
 
@@ -154,52 +154,7 @@
                       <th>Date</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td><span class="cid">#LIRS-2026-1091</span></td>
-                      <td>Chukwuemeka Obi</td>
-                      <td>VAT Dispute</td>
-                      <td><span class="pdot p-high"></span>High</td>
-                      <td><span class="badge badge-urgent">Escalated</span></td>
-                      <td>28 Jun 2026</td>
-                    </tr>
-                    <tr>
-                      <td><span class="cid">#LIRS-2026-1090</span></td>
-                      <td>Funmilayo Adebayo</td>
-                      <td>TIN Registration</td>
-                      <td><span class="pdot p-medium"></span>Medium</td>
-                      <td><span class="badge badge-open">Open</span></td>
-                      <td>27 Jun 2026</td>
-                    </tr>
-                    <tr>
-                      <td><span class="cid">#LIRS-2026-1089</span></td>
-                      <td>Musa Garba</td>
-                      <td>Refund Processing</td>
-                      <td><span class="pdot p-high"></span>High</td>
-                      <td>
-                        <span class="badge badge-pending">In Review</span>
-                      </td>
-                      <td>27 Jun 2026</td>
-                    </tr>
-                    <tr>
-                      <td><span class="cid">#LIRS-2026-1088</span></td>
-                      <td>Ngozi Eze-Williams</td>
-                      <td>PAYE Assessment</td>
-                      <td><span class="pdot p-low"></span>Low</td>
-                      <td>
-                        <span class="badge badge-resolved">Resolved</span>
-                      </td>
-                      <td>26 Jun 2026</td>
-                    </tr>
-                    <tr>
-                      <td><span class="cid">#LIRS-2026-1087</span></td>
-                      <td>Ibrahim Suleiman</td>
-                      <td>CIT Filing Error</td>
-                      <td><span class="pdot p-medium"></span>Medium</td>
-                      <td><span class="badge badge-open">Open</span></td>
-                      <td>26 Jun 2026</td>
-                    </tr>
-                  </tbody>
+                <tbody id="recent-complaints-tbody"></tbody>
                 </table>
               </div>
             </div>
@@ -222,47 +177,51 @@
                       stroke-width="4"
                     />
                     <circle
+                      id="donut-resolved"
                       cx="18"
                       cy="18"
                       r="15.9"
                       fill="none"
                       stroke="#059669"
                       stroke-width="4"
-                      stroke-dasharray="68.5 31.5"
+                      stroke-dasharray="0 100"
                       stroke-dashoffset="25"
                       stroke-linecap="round"
                     />
                     <circle
+                      id="donut-inprogress"
                       cx="18"
                       cy="18"
                       r="15.9"
                       fill="none"
                       stroke="#D97706"
                       stroke-width="4"
-                      stroke-dasharray="17 83"
-                      stroke-dashoffset="-43.5"
+                      stroke-dasharray="0 100"
+                      stroke-dashoffset="25"
                       stroke-linecap="round"
                     />
                     <circle
-                      cx="18"
-                      cy="18"
-                      r="15.9"
-                      fill="none"
-                      stroke="#DC2626"
-                      stroke-width="4"
-                      stroke-dasharray="5 95"
-                      stroke-dashoffset="-60.5"
-                      stroke-linecap="round"
-                    />
-                    <circle
+                      id="donut-new"
                       cx="18"
                       cy="18"
                       r="15.9"
                       fill="none"
                       stroke="#1D4ED8"
                       stroke-width="4"
-                      stroke-dasharray="9.5 90.5"
-                      stroke-dashoffset="-65.5"
+                      stroke-dasharray="0 100"
+                      stroke-dashoffset="25"
+                      stroke-linecap="round"
+                    />
+                    <circle
+                      id="donut-closedrejected"
+                      cx="18"
+                      cy="18"
+                      r="15.9"
+                      fill="none"
+                      stroke="#DC2626"
+                      stroke-width="4"
+                      stroke-dasharray="0 100"
+                      stroke-dashoffset="25"
                       stroke-linecap="round"
                     />
                     <text
@@ -272,8 +231,9 @@
                       font-size="5"
                       fill="#0F2419"
                       font-weight="700"
+                      id="donut-total-text"
                     >
-                      1,284
+                      0
                     </text>
                     <text
                       x="18"
@@ -294,7 +254,7 @@
                         style="background: var(--green-dark)"
                       ></span
                       >Resolved</span
-                    ><span class="legend-val">879</span>
+                    ><span class="legend-val" id="legend-resolved">0</span>
                   </div>
                   <div class="legend-row">
                     <span class="legend-left"
@@ -302,8 +262,8 @@
                         class="legend-dot"
                         style="background: var(--amber)"
                       ></span
-                      >Open</span
-                    ><span class="legend-val">218</span>
+                      >In Progress</span
+                    ><span class="legend-val" id="legend-inprogress">0</span>
                   </div>
                   <div class="legend-row">
                     <span class="legend-left"
@@ -311,8 +271,8 @@
                         class="legend-dot"
                         style="background: var(--blue)"
                       ></span
-                      >In Review</span
-                    ><span class="legend-val">124</span>
+                      >New</span
+                    ><span class="legend-val" id="legend-new">0</span>
                   </div>
                   <div class="legend-row">
                     <span class="legend-left"
@@ -320,8 +280,8 @@
                         class="legend-dot"
                         style="background: var(--red)"
                       ></span
-                      >Escalated</span
-                    ><span class="legend-val">63</span>
+                      >Closed / Rejected</span
+                    ><span class="legend-val" id="legend-closedrejected">0</span>
                   </div>
                 </div>
               </div>
@@ -332,42 +292,9 @@
                     <div class="panel-sub">System events · last 24 hours</div>
                   </div>
                 </div>
-                <div class="activity-item">
-                  <span class="a-dot" style="background: var(--green)"></span>
-                  <div>
-                    <div class="activity-text">
-                      <strong>#LIRS-2026-1084</strong> resolved by Officer Taiwo
-                    </div>
-                    <div class="activity-time">10:42 AM</div>
-                  </div>
-                </div>
-                <div class="activity-item">
-                  <span class="a-dot" style="background: var(--red)"></span>
-                  <div>
-                    <div class="activity-text">
-                      <strong>#LIRS-2026-1091</strong> escalated for director
-                      review
-                    </div>
-                    <div class="activity-time">09:15 AM</div>
-                  </div>
-                </div>
-                <div class="activity-item">
-                  <span class="a-dot" style="background: var(--blue)"></span>
-                  <div>
-                    <div class="activity-text">
-                      New complaint filed by <strong>Musa Garba</strong>
-                    </div>
-                    <div class="activity-time">08:50 AM</div>
-                  </div>
-                </div>
-                <div class="activity-item">
-                  <span class="a-dot" style="background: var(--amber)"></span>
-                  <div>
-                    <div class="activity-text">
-                      Monthly report exported by <strong>Amaka Adeyemi</strong>
-                    </div>
-                    <div class="activity-time">08:03 AM</div>
-                  </div>
+                <div id="recent-activity-list"></div>
+                <div id="recent-activity-empty" style="display: none; padding: 24px 22px; text-align: center; color: var(--text-muted); font-size: 13px">
+                  No recent activity yet.
                 </div>
               </div>
             </div>
@@ -377,188 +304,21 @@
         <!-- ══════════════ ALL COMPLAINTS TAB ══════════════ -->
         <div class="tab-page" id="tab-complaints">
           <div class="panel">
-            <div class="panel-header">
-              <div>
-                <div class="panel-title">All Complaints</div>
-                <div class="panel-sub">1,284 total records</div>
+            <div style="padding: 60px 40px; text-align: center; color: var(--text-muted)">
+              <div style="display: flex; justify-content: center; margin-bottom: 14px">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" width="36" height="36">
+                  <path d="M4 4h12M4 8h8M4 12h10M4 16h6" />
+                </svg>
               </div>
-              <div style="display: flex; gap: 10px">
-                <div class="search-bar">
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                  >
-                    <circle cx="9" cy="9" r="6" />
-                    <path d="M15 15l3 3" />
-                  </svg>
-                  <input placeholder="Search by ID, name, category…" />
-                </div>
-                <button class="btn btn-ghost btn-sm">
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                  >
-                    <path d="M3 4h14l-5.5 6.5V16l-3 1.5v-7L3 4z" />
-                  </svg>
-                  Filter
-                </button>
-                <button class="btn btn-primary btn-sm">
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                  >
-                    <circle cx="10" cy="10" r="7.5" />
-                    <path d="M10 6.5v7M6.5 10h7" />
-                  </svg>
-                  New
-                </button>
+              <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text)">
+                Full complaint management moved
               </div>
-            </div>
-            <div class="filter-row">
-              <div class="filter-chip active" onclick="setChip(this)">
-                All (1,284)
+              <div style="font-size: 13px; margin-bottom: 18px">
+                Search, filter, claim, and respond to complaints on the dedicated All Complaints page.
               </div>
-              <div class="filter-chip" onclick="setChip(this)">Open (218)</div>
-              <div class="filter-chip" onclick="setChip(this)">
-                In Review (124)
-              </div>
-              <div class="filter-chip" onclick="setChip(this)">
-                Resolved (879)
-              </div>
-              <div class="filter-chip" onclick="setChip(this)">
-                Escalated (63)
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Complaint ID</th>
-                    <th>Taxpayer</th>
-                    <th>TIN</th>
-                    <th>Category</th>
-                    <th>Priority</th>
-                    <th>Assigned To</th>
-                    <th>Status</th>
-                    <th>Date Filed</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><span class="cid">#LIRS-2026-1091</span></td>
-                    <td>Chukwuemeka Obi</td>
-                    <td>1234567-0001</td>
-                    <td>VAT Dispute</td>
-                    <td><span class="pdot p-high"></span>High</td>
-                    <td>Officer Bello</td>
-                    <td><span class="badge badge-urgent">Escalated</span></td>
-                    <td>28 Jun 2026</td>
-                    <td><button class="btn btn-ghost btn-sm">View</button></td>
-                  </tr>
-                  <tr>
-                    <td><span class="cid">#LIRS-2026-1090</span></td>
-                    <td>Funmilayo Adebayo</td>
-                    <td>9876543-0002</td>
-                    <td>TIN Registration</td>
-                    <td><span class="pdot p-medium"></span>Medium</td>
-                    <td>Officer Taiwo</td>
-                    <td><span class="badge badge-open">Open</span></td>
-                    <td>27 Jun 2026</td>
-                    <td><button class="btn btn-ghost btn-sm">View</button></td>
-                  </tr>
-                  <tr>
-                    <td><span class="cid">#LIRS-2026-1089</span></td>
-                    <td>Musa Garba</td>
-                    <td>5647382-0003</td>
-                    <td>Refund Processing</td>
-                    <td><span class="pdot p-high"></span>High</td>
-                    <td>Officer Kemi</td>
-                    <td><span class="badge badge-pending">In Review</span></td>
-                    <td>27 Jun 2026</td>
-                    <td><button class="btn btn-ghost btn-sm">View</button></td>
-                  </tr>
-                  <tr>
-                    <td><span class="cid">#LIRS-2026-1088</span></td>
-                    <td>Ngozi Eze-Williams</td>
-                    <td>1122334-0004</td>
-                    <td>PAYE Assessment</td>
-                    <td><span class="pdot p-low"></span>Low</td>
-                    <td>Officer Bello</td>
-                    <td><span class="badge badge-resolved">Resolved</span></td>
-                    <td>26 Jun 2026</td>
-                    <td><button class="btn btn-ghost btn-sm">View</button></td>
-                  </tr>
-                  <tr>
-                    <td><span class="cid">#LIRS-2026-1087</span></td>
-                    <td>Ibrahim Suleiman</td>
-                    <td>9988776-0005</td>
-                    <td>CIT Filing Error</td>
-                    <td><span class="pdot p-medium"></span>Medium</td>
-                    <td>Unassigned</td>
-                    <td><span class="badge badge-open">Open</span></td>
-                    <td>26 Jun 2026</td>
-                    <td><button class="btn btn-ghost btn-sm">View</button></td>
-                  </tr>
-                  <tr>
-                    <td><span class="cid">#LIRS-2026-1086</span></td>
-                    <td>Adaeze Nwosu</td>
-                    <td>6655443-0006</td>
-                    <td>Penalty Appeal</td>
-                    <td><span class="pdot p-low"></span>Low</td>
-                    <td>Officer Taiwo</td>
-                    <td><span class="badge badge-resolved">Resolved</span></td>
-                    <td>25 Jun 2026</td>
-                    <td><button class="btn btn-ghost btn-sm">View</button></td>
-                  </tr>
-                  <tr>
-                    <td><span class="cid">#LIRS-2026-1085</span></td>
-                    <td>Emeka Okafor</td>
-                    <td>3344556-0007</td>
-                    <td>WHT Deduction</td>
-                    <td><span class="pdot p-high"></span>High</td>
-                    <td>Officer Kemi</td>
-                    <td><span class="badge badge-urgent">Escalated</span></td>
-                    <td>24 Jun 2026</td>
-                    <td><button class="btn btn-ghost btn-sm">View</button></td>
-                  </tr>
-                  <tr>
-                    <td><span class="cid">#LIRS-2026-1084</span></td>
-                    <td>Hauwa Musa</td>
-                    <td>7788990-0008</td>
-                    <td>Stamp Duty</td>
-                    <td><span class="pdot p-low"></span>Low</td>
-                    <td>Officer Bello</td>
-                    <td><span class="badge badge-resolved">Resolved</span></td>
-                    <td>23 Jun 2026</td>
-                    <td><button class="btn btn-ghost btn-sm">View</button></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 14px 22px;
-                border-top: 1.5px solid var(--border);
-                background: var(--off-white);
-              "
-            >
-              <span style="font-size: 13px; color: var(--text-muted)"
-                >Showing 1–8 of 1,284</span
-              >
-              <div style="display: flex; gap: 8px">
-                <button class="btn btn-ghost btn-sm">← Prev</button>
-                <button class="btn btn-primary btn-sm">Next →</button>
-              </div>
+              <a href="admincomplaint.php" class="btn btn-primary" style="display: inline-flex">
+                Go to All Complaints →
+              </a>
             </div>
           </div>
         </div>
@@ -1536,62 +1296,158 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
     </div>
     <!-- /main -->
 
+    <script src="../admin-common.js"></script>
     <script>
-      // Guard: confirm there's a real admin session on the server before
-      // showing this page. Anyone not logged in as admin gets bounced.
-      (function checkSession() {
-        fetch("api/session.php", { credentials: "same-origin" })
-          .then((res) => res.json())
-          .then((result) => {
-            const isAdminRole =
-              result.data &&
-              result.data.loggedIn &&
-              (result.data.role === "super_admin" ||
-                result.data.role === "officer");
-            if (!isAdminRole) {
-              window.location.href = "login.php";
+      adminInit();
+      loadDashboardStats();
+
+      function initials(n) {
+        return adminInitials(n);
+      }
+
+      function formatTime12h(dateStr) {
+        return dateStr || "--";
+      }
+
+      function statusBadgeClass(rawStatus) {
+        if (rawStatus === "resolved") return "resolved";
+        if (rawStatus === "rejected") return "danger";
+        if (rawStatus === "closed") return "info";
+        if (rawStatus === "in_progress") return "review";
+        return "pending"; // new
+      }
+
+      // Sets the dasharray/dashoffset for one donut ring segment.
+      // circumference for r=15.9 is ~99.9, treated as 100 for simplicity
+      // (matches the original markup's percentage-as-length convention).
+      function setDonutSegment(id, percent, offsetSoFar) {
+        var el = document.getElementById(id);
+        el.setAttribute("stroke-dasharray", percent + " " + (100 - percent));
+        el.setAttribute("stroke-dashoffset", (25 - offsetSoFar).toString());
+      }
+
+      function loadDashboardStats() {
+        fetch("../api/admin/get-dashboardstats.php", { credentials: "same-origin" })
+          .then(function (res) {
+            return res.json().then(function (data) {
+              return { status: res.status, data: data };
+            });
+          })
+          .then(function (result) {
+            if (result.status === 401) {
+              window.location.href = "../login.php";
               return;
             }
-            sessionStorage.setItem("adminName", result.data.name);
-            sessionStorage.setItem("adminEmail", result.data.email);
-            document.getElementById("admin-name").textContent =
-              result.data.name;
-            document.getElementById("admin-avatar").textContent = initials(
-              result.data.name,
-            );
-            document.querySelector(".admin-role").textContent =
-              result.data.role === "super_admin" ? "Super Admin" : "Officer";
+            if (!result.data.success) {
+              console.warn(result.data.message);
+              return;
+            }
+            var d = result.data.data;
+            renderKpis(d.kpis);
+            renderDonut(d.kpis);
+            renderRecentComplaints(d.recent_complaints);
+            renderRecentActivity(d.recent_activity);
           })
-          .catch(() => {
-            console.warn("Could not verify session with the backend.");
+          .catch(function (err) {
+            console.warn("Could not load dashboard stats:", err);
           });
-      })();
-
-      var adminName = sessionStorage.getItem("adminName") || "Amaka Adeyemi";
-      function initials(n) {
-        return n
-          .split(" ")
-          .map(function (w) {
-            return w[0];
-          })
-          .join("")
-          .toUpperCase()
-          .slice(0, 2);
       }
-      document.getElementById("admin-name").textContent = adminName;
-      document.getElementById("admin-avatar").textContent = initials(adminName);
 
-      document
-        .getElementById("logout-btn")
-        .addEventListener("click", function (e) {
-          e.preventDefault();
-          fetch("api/logout.php", {
-            method: "POST",
-            credentials: "same-origin",
+      function renderKpis(k) {
+        document.getElementById("kpi-total").textContent = k.total.toLocaleString();
+        document.getElementById("kpi-open").textContent = (k.new + k.in_progress).toLocaleString();
+        document.getElementById("kpi-resolved").textContent = k.resolved.toLocaleString();
+        document.getElementById("kpi-highpriority").textContent = k.high_priority.toLocaleString();
+
+        document.getElementById("kpi-total-sub").textContent = k.new + " new this list";
+        document.getElementById("kpi-open-sub").textContent = k.new + " new · " + k.in_progress + " in progress";
+        document.getElementById("kpi-resolved-sub").textContent = k.resolution_rate + "% resolution rate";
+        document.getElementById("kpi-highpriority-sub").textContent = "Needs attention first";
+      }
+
+      function renderDonut(k) {
+        var total = k.total || 1; // avoid divide-by-zero
+        var resolvedPct = Math.round((k.resolved / total) * 100);
+        var inProgressPct = Math.round((k.in_progress / total) * 100);
+        var newPct = Math.round((k.new / total) * 100);
+        var closedRejectedPct = Math.max(0, 100 - resolvedPct - inProgressPct - newPct);
+
+        var running = 0;
+        setDonutSegment("donut-resolved", resolvedPct, running);
+        running += resolvedPct;
+        setDonutSegment("donut-inprogress", inProgressPct, running);
+        running += inProgressPct;
+        setDonutSegment("donut-new", newPct, running);
+        running += newPct;
+        setDonutSegment("donut-closedrejected", closedRejectedPct, running);
+
+        document.getElementById("donut-total-text").textContent = k.total.toLocaleString();
+        document.getElementById("legend-resolved").textContent = k.resolved;
+        document.getElementById("legend-inprogress").textContent = k.in_progress;
+        document.getElementById("legend-new").textContent = k.new;
+        document.getElementById("legend-closedrejected").textContent = k.closed + k.rejected;
+      }
+
+      function renderRecentComplaints(list) {
+        var tbody = document.getElementById("recent-complaints-tbody");
+        tbody.innerHTML = "";
+
+        if (!list.length) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">No complaints yet.</td></tr>';
+          return;
+        }
+
+        list.forEach(function (c) {
+          var row = document.createElement("tr");
+          row.style.cursor = "pointer";
+          row.innerHTML =
+            '<td><span class="cid"></span></td>' +
+            "<td></td><td></td><td></td>" +
+            '<td><span class="badge"></span></td>' +
+            "<td></td>";
+          row.children[0].querySelector(".cid").textContent = c.reference_id;
+          row.children[1].textContent = c.taxpayer_name;
+          row.children[2].textContent = c.category;
+          row.children[3].textContent = c.priority;
+          var badge = row.children[4].querySelector(".badge");
+          badge.textContent = c.status;
+          badge.classList.add(statusBadgeClass(c.status_raw));
+          row.children[5].textContent = c.created_at_label;
+          row.addEventListener("click", function () {
+            window.location.href = "admincomplaints-details.php?id=" + c.id;
           });
-          sessionStorage.clear();
-          window.location.href = "index.php";
+          tbody.appendChild(row);
         });
+      }
+
+      function renderRecentActivity(list) {
+        var container = document.getElementById("recent-activity-list");
+        container.innerHTML = "";
+
+        if (!list.length) {
+          document.getElementById("recent-activity-empty").style.display = "";
+          return;
+        }
+        document.getElementById("recent-activity-empty").style.display = "none";
+
+        var colorVar = {
+          green: "var(--green)",
+          red: "var(--red)",
+          blue: "var(--blue)",
+          amber: "var(--amber)",
+        };
+
+        list.forEach(function (a) {
+          var div = document.createElement("div");
+          div.className = "activity-item";
+          div.innerHTML =
+            '<span class="a-dot" style="background: ' + (colorVar[a.color] || "var(--blue)") + '"></span>' +
+            '<div><div class="activity-text"></div><div class="activity-time"></div></div>';
+          div.querySelector(".activity-text").textContent = a.text;
+          div.querySelector(".activity-time").textContent = a.time;
+          container.appendChild(div);
+        });
+      }
 
       const titles = {
         dashboard: "Dashboard",
@@ -1653,6 +1509,3 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
     </script>
   </body>
 </html>
-
-
-

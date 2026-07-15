@@ -53,10 +53,10 @@ try {
 
     
     $resp_stmt = $pdo->prepare(
-        'SELECT cr.id, cr.message, cr.attachment_path, cr.created_at
+        'SELECT cr.id, cr.message, cr.attachment_path, cr.created_at, a.name as admin_name
          FROM complaint_responses cr
-      
-         WHERE cr.complaint_id = ? AND cr.is_internal = 0
+         LEFT JOIN admins a ON cr.admin_id = a.id
+         WHERE cr.complaint_id = ?
          ORDER BY cr.created_at ASC'
     );
     $resp_stmt->execute([$complaint_id]);
