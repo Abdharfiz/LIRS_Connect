@@ -132,7 +132,8 @@
                 <tr>
                   <th>Complaint ID</th>
                   <th>Taxpayer</th>
-                  <th>TIN</th>
+                  <th>PayID</th>
+
                   <th>Category</th>
                   <th>Priority</th>
                   <th>Assigned To</th>
@@ -263,6 +264,8 @@
           row.children[0].querySelector(".cid").textContent = c.reference_id;
           row.children[1].textContent = c.taxpayer_name;
           row.children[2].textContent = c.taxpayer_tin || "--";
+
+
           row.children[3].textContent = c.category;
           row.children[4].textContent = c.priority;
           row.children[5].textContent = c.assigned_to || "Unassigned";

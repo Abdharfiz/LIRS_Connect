@@ -61,7 +61,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
         <div class="t-tin" id="admin-role">--</div>
       </div>
     </div>
-    <a href="login.php" class="logout-btn" id="logout-btn">
+    <a href="../api/login.php" class="logout-btn" id="logout-btn">
       <svg
         width="14"
         height="14"

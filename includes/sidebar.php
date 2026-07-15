@@ -101,7 +101,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
         <path d="M13 15l5-5-5-5M18 10H7" />
         <path d="M7 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h3" />
       </svg>
-      Log Out
+      Loggg Out
     </a>
   </div>
 </aside>

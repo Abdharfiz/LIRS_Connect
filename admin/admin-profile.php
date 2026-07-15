@@ -154,7 +154,7 @@
       var currentProfile = null;
 
       function loadProfile() {
-        fetch("../api/admin/profile.php", { credentials: "same-origin" })
+        fetch("../api/admin/admin-profile.php", { credentials: "same-origin" })
           .then(function (res) { return res.json(); })
           .then(function (result) {
             if (!result.success) {
@@ -204,7 +204,7 @@
           return;
         }
 
-        fetch("../api/admin/profile.php", {
+        fetch("../api/admin/admin-profile.php", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "same-origin",
@@ -235,7 +235,7 @@
           return;
         }
 
-        fetch("../api/admin/profile.php", {
+        fetch("../api/admin/admin-profile.php", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "same-origin",

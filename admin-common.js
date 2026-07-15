@@ -60,7 +60,7 @@ function adminWireLogout() {
     e.preventDefault();
     fetch("../api/logout.php", { method: "POST", credentials: "same-origin" });
     sessionStorage.clear();
-    window.location.href = "../index.html";
+    window.location.href = "../index.php";
   });
 }
 

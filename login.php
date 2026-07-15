@@ -390,7 +390,7 @@
   </head>
   <body>
     <nav class="navbar">
-      <a href="index.html" class="logo">
+      <a href="index.php" class="logo">
         <div class="logo-icon">TT</div>
         <span class="logo-text">LIRS<span>Connect</span></span>
       </a>
