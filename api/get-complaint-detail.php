@@ -51,13 +51,17 @@ try {
         respond(false, 'Complaint not found.', [], 404);
     }
 
-    
+    // IMPORTANT: only responses NOT marked internal — internal officer
+    // notes must never reach the taxpayer's own view of the thread.
+    // COALESCE handles rows created before sender_type existed.
     $resp_stmt = $pdo->prepare(
-        'SELECT cr.id, cr.message, cr.attachment_path, cr.created_at, a.name as admin_name
+        "SELECT cr.id, cr.message, cr.attachment_path, cr.created_at,
+                COALESCE(cr.sender_type, 'admin') AS sender_type,
+                a.name as admin_name
          FROM complaint_responses cr
          LEFT JOIN admins a ON cr.admin_id = a.id
-         WHERE cr.complaint_id = ?
-         ORDER BY cr.created_at ASC'
+         WHERE cr.complaint_id = ? AND cr.is_internal = 0
+         ORDER BY cr.created_at ASC"
     );
     $resp_stmt->execute([$complaint_id]);
     $responses = $resp_stmt->fetchAll();
@@ -65,9 +69,11 @@ try {
     // Format response
     $formatted_responses = [];
     foreach ($responses as $response) {
+        $isTaxpayer = $response['sender_type'] === 'taxpayer';
         $formatted_responses[] = [
             'id' => $response['id'],
-            'admin_name' => $response['admin_name'] ?? 'LIRS Officer',
+            'sender_type' => $response['sender_type'],
+            'admin_name' => $isTaxpayer ? 'You' : ($response['admin_name'] ?? 'LIRS Officer'),
             'message' => $response['message'],
             'attachment_path' => $response['attachment_path'],
             'created_at' => safeDateTime($response['created_at'], 'c'),

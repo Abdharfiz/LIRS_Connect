@@ -121,20 +121,26 @@ try {
 
     // Admins see ALL responses, including internal notes.
     $resp_stmt = $pdo->prepare(
-        'SELECT cr.id, cr.message, cr.attachment_path, cr.is_internal, cr.created_at, a.name as admin_name
+        "SELECT cr.id, cr.message, cr.attachment_path, cr.is_internal, cr.created_at,
+                COALESCE(cr.sender_type, 'admin') AS sender_type,
+                a.name as admin_name
          FROM complaint_responses cr
          LEFT JOIN admins a ON cr.admin_id = a.id
          WHERE cr.complaint_id = ?
-         ORDER BY cr.created_at ASC'
+         ORDER BY cr.created_at ASC"
     );
     $resp_stmt->execute([$complaint_id]);
     $responses = $resp_stmt->fetchAll();
 
+    $taxpayerFullName = trim($complaint['first_name'] . ' ' . $complaint['last_name']);
+
     $formatted_responses = [];
     foreach ($responses as $response) {
+        $isTaxpayer = $response['sender_type'] === 'taxpayer';
         $formatted_responses[] = [
             'id' => $response['id'],
-            'admin_name' => $response['admin_name'] ?? 'LIRS Officer',
+            'sender_type' => $response['sender_type'],
+            'admin_name' => $isTaxpayer ? ($taxpayerFullName . ' (Taxpayer)') : ($response['admin_name'] ?? 'LIRS Officer'),
             'message' => $response['message'],
             'attachment_path' => $response['attachment_path'],
             'is_internal' => (bool)$response['is_internal'],
