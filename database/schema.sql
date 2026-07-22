@@ -97,3 +97,11 @@ CREATE TABLE IF NOT EXISTS notifications (
     INDEX idx_unread (is_read),
     INDEX idx_created (created_at)
 ) ENGINE=InnoDB;
+
+
+ALTER TABLE complaint_responses
+  ADD COLUMN sender_type ENUM('admin','taxpayer') NOT NULL DEFAULT 'admin' AFTER admin_id,
+  ADD COLUMN taxpayer_id INT NULL AFTER sender_type,
+  ADD CONSTRAINT fk_complaint_responses_taxpayer
+    FOREIGN KEY (taxpayer_id) REFERENCES taxpayers(id) ON DELETE CASCADE;
+ 

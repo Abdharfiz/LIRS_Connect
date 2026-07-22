@@ -62,14 +62,26 @@
 
               <div class="panel" id="response-panel" >
                 <div class="panel-head">
-                  <div class="panel-title">Response from LIRS Officer</div>
+                  <div class="panel-title">Conversation with LIRS</div>
                 </div>
-                <div class="response-item" style="cursor: default">
-                  <div class="resp-meta">
-                    <span class="resp-cid" id="resp-officer">Officer</span>
-                    <span class="resp-date" id="resp-date">--</span>
-                  </div>
-                  <div class="resp-preview" id="resp-body">—</div>
+                <div id="responses-list"></div>
+                <div id="responses-empty" style="display: none; padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px">
+                  No responses yet.
+                </div>
+                <div style="padding: 16px 20px; border-top: 1px solid var(--border)">
+                  <textarea
+                    class="form-input"
+                    id="reply-message"
+                    rows="3"
+                    placeholder="Write a reply — e.g. attach the requested document, or ask a question..."
+                    style="resize: vertical; margin-bottom: 10px"
+                  ></textarea>
+                  <button class="btn-primary" id="reply-submit" onclick="submitReply()">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14">
+                      <path d="M3 10h14M11 4l6 6-6 6" />
+                    </svg>
+                    Send Reply
+                  </button>
                 </div>
               </div>
             </div>
@@ -136,11 +148,14 @@
     <div class="toast" id="toast"></div>
 
     <script>
+      var complaintId = null;
+
       function init() {
         loadProfile();
 
         var params = new URLSearchParams(window.location.search);
         var id = params.get("id");
+        complaintId = id;
 
         if (!id) {
           showNotFound("Complaint not found", "No complaint ID was provided in the link.");
@@ -251,7 +266,7 @@
           { title: "Complaint submitted", time: dateStr, done: true }
         ];
         
-        if (c.status === "Under Review") {
+        if (c.status === "In Progress") {
           timelineSteps.push({ title: "Assigned for review", time: "In progress", done: false });
         } else if (c.status === "Resolved") {
           timelineSteps.push({ title: "Assigned for review", time: "Completed", done: true });
@@ -275,29 +290,75 @@
         });
 
         // Show all responses if available
-        if (responses && responses.length > 0) {
-          document.getElementById("response-panel").style.display = "";
+        renderResponses(responses || []);
+      }
 
-          var panel = document.getElementById("response-panel");
-          
-          panel.querySelectorAll('.response-item').forEach(function (el) {
-            if (!el.dataset || el.dataset.keep !== 'true') el.remove();
-          });
+      function renderResponses(responses) {
+        var list = document.getElementById("responses-list");
+        list.innerHTML = "";
 
-          responses.forEach(function (resp) {
-            var item = document.createElement('div');
-            item.className = 'response-item';
-            item.style.cursor = 'default';
-            item.innerHTML =
-              '<div class="resp-meta">' +
-                '<span class="resp-cid">' + (resp.admin_name || 'LIRS Officer') + '</span>' +
-                '<span class="resp-date">' + formatDate(resp.created_at) + '</span>' +
-              '</div>' +
-              '<div class="resp-preview">' + (resp.message || '') + '</div>';
-
-            panel.appendChild(item);
-          });
+        if (!responses.length) {
+          document.getElementById("responses-empty").style.display = "";
+          return;
         }
+        document.getElementById("responses-empty").style.display = "none";
+
+        responses.forEach(function (resp) {
+          var isMine = resp.sender_type === "taxpayer";
+          var item = document.createElement("div");
+          item.className = "response-item";
+          item.style.cursor = "default";
+          item.style.borderLeft = isMine
+            ? "3px solid var(--blue, #1d4ed8)"
+            : "3px solid var(--green, #10b981)";
+
+          item.innerHTML =
+            '<div class="resp-meta">' +
+              '<span class="resp-cid"></span>' +
+              '<span class="resp-date"></span>' +
+            '</div>' +
+            '<div class="resp-preview"></div>';
+
+          item.querySelector(".resp-cid").textContent = resp.admin_name || (isMine ? "You" : "LIRS Officer");
+          item.querySelector(".resp-date").textContent = formatDate(resp.created_at);
+          item.querySelector(".resp-preview").textContent = resp.message || "";
+
+          list.appendChild(item);
+        });
+      }
+
+      function submitReply() {
+        var message = document.getElementById("reply-message").value.trim();
+        if (!message) {
+          showToast("Please write a message first.");
+          return;
+        }
+        if (!complaintId) return;
+
+        var btn = document.getElementById("reply-submit");
+        btn.disabled = true;
+
+        fetch("api/reply-compliants.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify({ complaint_id: complaintId, message: message }),
+        })
+          .then(function (res) { return res.json(); })
+          .then(function (result) {
+            btn.disabled = false;
+            if (result.success) {
+              document.getElementById("reply-message").value = "";
+              showToast(result.message || "Reply sent.");
+              init(); // reload the whole complaint so status/timeline stay in sync
+            } else {
+              showToast(result.message || "Could not send reply.");
+            }
+          })
+          .catch(function () {
+            btn.disabled = false;
+            showToast("Could not reach the server. Please try again.");
+          });
       }
 
       function formatDate(dateStr) {
@@ -310,8 +371,8 @@
 
       function statusClass(status) {
         var normalized = (status || "").toLowerCase();
-        if (normalized === "new" || normalized === "pending") return "pending";
-        if (normalized === "under review") return "review";
+        if (normalized === "new") return "pending";
+        if (normalized === "in progress") return "review";
         if (normalized === "resolved") return "resolved";
         if (normalized === "rejected") return "rejected";
         if (normalized === "closed") return "closed";

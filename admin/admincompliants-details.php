@@ -314,10 +314,13 @@
         document.getElementById("responses-empty").style.display = "none";
 
         responses.forEach(function (r) {
+          var isTaxpayer = r.sender_type === "taxpayer";
           var div = document.createElement("div");
           div.className = "response-item";
           div.style.cursor = "default";
-          div.style.borderLeft = r.is_internal ? "3px solid var(--amber, #d97706)" : "3px solid var(--green, #10b981)";
+          div.style.borderLeft = isTaxpayer
+            ? "3px solid var(--blue, #1d4ed8)"
+            : (r.is_internal ? "3px solid var(--amber, #d97706)" : "3px solid var(--green, #10b981)");
 
           div.innerHTML =
             '<div class="resp-meta"><span class="resp-cid"></span><span class="resp-date"></span></div>' +
