@@ -95,6 +95,7 @@
                       <select class="form-select" id="reply-status" style="width: 170px">
                         <option value="">Keep current status</option>
                         <option value="in_progress">In Progress</option>
+                        <option value="returned">Returned</option>
                         <option value="resolved">Resolved</option>
                         <option value="rejected">Rejected</option>
                         <option value="closed">Closed</option>
@@ -151,7 +152,7 @@
                 <div class="detail-meta-grid">
                   <div class="detail-meta-item" style="grid-column: 1 / -1">
                     <div class="m-label">Name</div>
-                    <div class="m-value" id="tp-name">--</div>
+                    <div class="m-value"><a id="tp-name" href="#" style="color: inherit; text-decoration: underline">--</a></div>
                   </div>
                   <div class="detail-meta-item">
                     <div class="m-label">Email</div>
@@ -208,6 +209,7 @@
         if (rawStatus === "rejected") return "danger";
         if (rawStatus === "closed") return "info";
         if (rawStatus === "in_progress") return "review";
+        if (rawStatus === "returned") return "danger"; // urgent — needs another look
         return "pending"; // new
       }
 
@@ -294,7 +296,9 @@
         document.getElementById("m-status").textContent = c.status;
         document.getElementById("m-assigned").textContent = c.assigned_to || "Unassigned";
 
-        document.getElementById("tp-name").textContent = taxpayer.name;
+        var tpNameLink = document.getElementById("tp-name");
+        tpNameLink.textContent = taxpayer.name;
+        tpNameLink.href = "admin-taxpayer-detail.php?id=" + taxpayer.id;
         document.getElementById("tp-email").textContent = taxpayer.email;
         document.getElementById("tp-phone").textContent = taxpayer.phone || "--";
         document.getElementById("tp-tin").textContent = taxpayer.tin || "--";

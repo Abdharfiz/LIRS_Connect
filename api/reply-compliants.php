@@ -46,18 +46,18 @@ try {
 
     // If this complaint had already been marked resolved/closed/rejected
     // and the taxpayer is following up (e.g. attaching a requested
-    // document), bring it back into the active queue so an officer
-    // actually sees it needs another look — rather than it quietly
-    // sitting "Resolved" with an unread reply underneath.
+    // document), mark it 'returned' — distinct from a fresh 'new'
+    // complaint or one an officer is actively working ('in_progress') —
+    // so admins can immediately see it needs another look.
     $reopened = false;
     if (in_array($complaint['status'], ['resolved', 'closed', 'rejected'], true)) {
-        $update = $pdo->prepare("UPDATE complaints SET status = 'in_progress', resolved_at = NULL WHERE id = ?");
+        $update = $pdo->prepare("UPDATE complaints SET status = 'returned', resolved_at = NULL WHERE id = ?");
         $update->execute([$complaint_id]);
         $reopened = true;
     }
 
     respond(true, $reopened
-        ? 'Reply sent — this complaint has been reopened for review.'
+        ? 'Reply sent — this complaint has been marked Returned for review.'
         : 'Reply sent.', [
         'complaint_id' => $complaint_id,
         'reopened' => $reopened,

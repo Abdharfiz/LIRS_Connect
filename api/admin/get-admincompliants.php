@@ -18,15 +18,19 @@ function safeDateTime(?string $value, string $format): ?string
     return date($format, $timestamp);
 }
 
-// Collapses the underlying 5-state status down to the 3 states admins
-// actually want to see at a glance: New (nobody's touched it), Open
-// (assigned/being worked), Closed (done, one way or another).
+// Collapses the underlying statuses down to what admins actually want
+// to see at a glance: New (nobody's touched it), Open (being worked),
+// Returned (taxpayer followed up on a finalized complaint — needs
+// another look), Closed (done, one way or another).
 function statusGroup(string $status): string
 {
     // Matches the ACTUAL live schema's ENUM:
-    // ('new','in_progress','resolved','closed','rejected')
+    // ('new','in_progress','resolved','closed','rejected','returned')
     if ($status === 'new') {
         return 'New';
+    }
+    if ($status === 'returned') {
+        return 'Returned';
     }
     if ($status === 'resolved' || $status === 'rejected' || $status === 'closed') {
         return 'Closed';
@@ -54,6 +58,8 @@ try {
 
     if ($group === 'New') {
         $where[] = "c.status = 'new'";
+    } elseif ($group === 'Returned') {
+        $where[] = "c.status = 'returned'";
     } elseif ($group === 'Closed') {
         $where[] = "c.status IN ('resolved','rejected','closed')";
     } elseif ($group === 'Open') {
@@ -84,7 +90,7 @@ try {
             JOIN taxpayers t ON c.taxpayer_id = t.id
             LEFT JOIN admins a ON c.assigned_to = a.id
             $whereSql
-            ORDER BY c.created_at DESC
+            ORDER BY (c.status = 'returned') DESC, c.created_at DESC
             LIMIT ?, ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(array_merge($params, [$offset, $per_page]));
@@ -111,11 +117,12 @@ try {
         ];
     }
 
-    // Counts for the New/Open/Closed tabs, independent of current filter/page.
+    // Counts for the New/Open/Returned/Closed tabs, independent of current filter/page.
     $group_counts_stmt = $pdo->query(
         "SELECT
             SUM(status = 'new') AS new_count,
             SUM(status = 'in_progress') AS open_count,
+            SUM(status = 'returned') AS returned_count,
             SUM(status IN ('resolved','rejected','closed')) AS closed_count,
             COUNT(*) AS all_count
          FROM complaints"
@@ -128,6 +135,7 @@ try {
             'all' => (int)$counts['all_count'],
             'new' => (int)$counts['new_count'],
             'open' => (int)$counts['open_count'],
+            'returned' => (int)$counts['returned_count'],
             'closed' => (int)$counts['closed_count'],
         ],
         'pagination' => [
