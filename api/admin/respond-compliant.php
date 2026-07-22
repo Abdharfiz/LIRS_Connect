@@ -20,7 +20,7 @@ try {
     $is_internal = !empty($body['is_internal']) ? 1 : 0;
     // Matches the ACTUAL live schema's ENUM: ('new','in_progress','resolved','closed','rejected')
     $new_status = cleanStr($body['status'] ?? '');
-    $valid_statuses = ['new', 'in_progress', 'resolved', 'rejected', 'closed'];
+    $valid_statuses = ['new', 'in_progress', 'resolved', 'rejected', 'closed', 'returned'];
 
     if ($complaint_id === 0) {
         respond(false, 'Complaint ID is required.', [], 400);

@@ -19,10 +19,10 @@
       <header class="topbar">
         <div class="topbar-left">
           <h1 id="page-title">Dashboard</h1>
-          <p>Sunday, 28 June 2026 &mdash; Lagos Internal Revenue Service</p>
+          <p><?php echo date('l, j F Y'); ?> &mdash; Lagos Internal Revenue Service</p>
         </div>
         <div class="topbar-right">
-          <button class="btn btn-ghost">
+          <button class="btn btn-ghost" id="export-btn" onclick="exportDashboardReport()">
             <svg
               viewBox="0 0 20 20"
               fill="none"
@@ -31,7 +31,7 @@
             >
               <path d="M10 13V3M6.5 6.5 10 3l3.5 3.5M4 17h12" />
             </svg>
-            Export
+            <span id="export-btn-label">Export</span>
           </button>
           <div class="notif-btn" onclick="showTab('notifications', null)">
             <svg
@@ -1296,10 +1296,24 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
     </div>
     <!-- /main -->
 
+    <div class="toast" id="toast"></div>
+
     <script src="../admin-common.js"></script>
     <script>
       adminInit();
       loadDashboardStats();
+
+      var toastTimer;
+      function showToast(msg) {
+        var t = document.getElementById("toast");
+        if (!t) return;
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+          t.classList.remove("show");
+        }, 2800);
+      }
 
       function initials(n) {
         return adminInitials(n);
@@ -1314,6 +1328,7 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
         if (rawStatus === "rejected") return "danger";
         if (rawStatus === "closed") return "info";
         if (rawStatus === "in_progress") return "review";
+        if (rawStatus === "returned") return "danger"; // urgent — needs another look
         return "pending"; // new
       }
 
@@ -1360,7 +1375,8 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
         document.getElementById("kpi-highpriority").textContent = k.high_priority.toLocaleString();
 
         document.getElementById("kpi-total-sub").textContent = k.new + " new this list";
-        document.getElementById("kpi-open-sub").textContent = k.new + " new · " + k.in_progress + " in progress";
+        document.getElementById("kpi-open-sub").textContent =
+          k.new + " new · " + k.in_progress + " in progress" + (k.returned > 0 ? " · " + k.returned + " returned ⚠" : "");
         document.getElementById("kpi-resolved-sub").textContent = k.resolution_rate + "% resolution rate";
         document.getElementById("kpi-highpriority-sub").textContent = "Needs attention first";
       }
@@ -1447,6 +1463,108 @@ Lagos Internal Revenue Service, Block 4, Adeyemi Bero Close, Alausa, Ikeja, Lago
           div.querySelector(".activity-time").textContent = a.time;
           container.appendChild(div);
         });
+      }
+
+      function csvEscape(value) {
+        var str = value === null || value === undefined ? "" : String(value);
+        if (/[",\n]/.test(str)) {
+          str = '"' + str.replace(/"/g, '""') + '"';
+        }
+        return str;
+      }
+
+      function downloadCsv(filename, rows) {
+        var csv = rows
+          .map(function (row) {
+            return row.map(csvEscape).join(",");
+          })
+          .join("\r\n");
+        var blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(function () {
+          URL.revokeObjectURL(url);
+        }, 1000);
+      }
+
+      function exportDashboardReport() {
+        var btn = document.getElementById("export-btn");
+        var label = document.getElementById("export-btn-label");
+        btn.disabled = true;
+        label.textContent = "Exporting...";
+
+        Promise.all([
+          fetch("../api/admin/get-dashboardstats.php", { credentials: "same-origin" }).then(function (res) {
+            return res.json();
+          }),
+          fetch("../api/admin/get-admincompliants.php?per_page=1000", { credentials: "same-origin" }).then(function (res) {
+            return res.json();
+          }),
+        ])
+          .then(function (results) {
+            var statsResult = results[0];
+            var complaintsResult = results[1];
+
+            if (!statsResult.success || !complaintsResult.success) {
+              showToast((statsResult.message || complaintsResult.message) || "Could not export report right now.");
+              return;
+            }
+
+            var k = statsResult.data.kpis;
+            var complaints = complaintsResult.data.complaints || [];
+
+            var rows = [];
+            rows.push(["LIRS Connect \u2014 Dashboard Report"]);
+            rows.push(["Generated", new Date().toLocaleString()]);
+            rows.push([]);
+            rows.push(["Summary"]);
+            rows.push(["Total Complaints", k.total]);
+            rows.push(["New", k.new]);
+            rows.push(["In Progress", k.in_progress]);
+            rows.push(["Resolved", k.resolved]);
+            rows.push(["Returned", k.returned]);
+            rows.push(["Rejected", k.rejected]);
+            rows.push(["Closed", k.closed]);
+            rows.push(["High Priority", k.high_priority]);
+            rows.push(["Resolution Rate", k.resolution_rate + "%"]);
+            rows.push([]);
+            rows.push(["Complaints"]);
+            rows.push(["Complaint ID", "Taxpayer", "TIN", "Category", "Priority", "Status", "Assigned To", "Date Filed"]);
+            complaints.forEach(function (c) {
+              rows.push([
+                c.reference_id,
+                c.taxpayer_name,
+                c.taxpayer_tin || "",
+                c.category,
+                c.priority,
+                c.status,
+                c.assigned_to || "Unassigned",
+                c.created_at_label,
+              ]);
+            });
+
+            var today = new Date();
+            var datePart =
+              today.getFullYear() +
+              "-" +
+              String(today.getMonth() + 1).padStart(2, "0") +
+              "-" +
+              String(today.getDate()).padStart(2, "0");
+            downloadCsv("lirs-dashboard-report-" + datePart + ".csv", rows);
+            showToast("Report downloaded.");
+          })
+          .catch(function () {
+            showToast("Could not reach the server. Please try again.");
+          })
+          .finally(function () {
+            btn.disabled = false;
+            label.textContent = "Export";
+          });
       }
 
       const titles = {

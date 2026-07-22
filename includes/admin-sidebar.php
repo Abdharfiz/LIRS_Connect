@@ -40,6 +40,19 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
     All Complaints
     <span class="nav-badge" id="new-complaints-badge" style="display: none">0</span>
   </a>
+  <a href="admin-taxpayers.php" class="nav-item <?php echo in_array($current_page, ['admin-taxpayers', 'admin-taxpayer-detail']) ? 'active' : ''; ?>">
+    <svg
+      class="nav-icon"
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+    >
+      <circle cx="10" cy="7" r="3.5" />
+      <path d="M3 17c0-3.3 3.1-6 7-6s7 2.7 7 6" />
+    </svg>
+    Taxpayers
+  </a>
   <a href="admin-profile.php" class="nav-item <?php echo $current_page === 'admin-profile' ? 'active' : ''; ?>">
     <svg
       class="nav-icon"

@@ -70,7 +70,8 @@ function adminWireLogout() {
 function adminLoadBadge() {
   var badge = document.getElementById("new-complaints-badge");
   if (!badge) return;
-  fetch("../api/admin/get-admincompliants.php?group=New&per_page=1", {
+  // No group filter — we need both new AND returned counts together.
+  fetch("../api/admin/get-admincompliants.php?per_page=1", {
     credentials: "same-origin",
   })
     .then(function (res) {
@@ -78,7 +79,8 @@ function adminLoadBadge() {
     })
     .then(function (result) {
       if (!result.success) return;
-      var count = result.data.counts ? result.data.counts.new : 0;
+      var c = result.data.counts || {};
+      var count = (c.new || 0) + (c.returned || 0);
       badge.textContent = count;
       badge.style.display = count > 0 ? "" : "none";
     })

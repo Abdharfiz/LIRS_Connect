@@ -26,13 +26,14 @@ try {
     requireAdmin();
 
     // ---- KPI counts ----
-    // NOTE: this schema's status ENUM is ('new','in_progress','resolved','closed','rejected') —
+    // NOTE: this schema's status ENUM is ('new','in_progress','resolved','closed','rejected','returned') —
     // there's no "escalated" state, so the 4th KPI uses priority='high' instead.
     $countsStmt = $pdo->query(
         "SELECT
             COUNT(*) AS total,
             SUM(status = 'new') AS new_count,
             SUM(status = 'in_progress') AS in_progress_count,
+            SUM(status = 'returned') AS returned_count,
             SUM(status = 'resolved') AS resolved_count,
             SUM(status = 'rejected') AS rejected_count,
             SUM(status = 'closed') AS closed_count,
@@ -46,12 +47,14 @@ try {
     $resolutionRate = $total > 0 ? round(($resolved / $total) * 100, 1) : 0;
 
     // ---- Recent complaints (top 5) ----
+    // Returned complaints bubble to the top regardless of date, so admins
+    // never have to scroll to notice a taxpayer followed up.
     $recentStmt = $pdo->query(
         "SELECT c.id, c.category, c.status, c.priority, c.created_at,
                 t.first_name, t.last_name
          FROM complaints c
          JOIN taxpayers t ON c.taxpayer_id = t.id
-         ORDER BY c.created_at DESC
+         ORDER BY (c.status = 'returned') DESC, c.created_at DESC
          LIMIT 5"
     );
     $recentRows = $recentStmt->fetchAll();
@@ -90,6 +93,9 @@ try {
         if ($wasJustCreated) {
             $text = "New complaint {$ref} filed by {$taxpayerName}";
             $color = 'blue';
+        } elseif ($row['status'] === 'returned') {
+            $text = "{$ref} RETURNED by {$taxpayerName} — needs review";
+            $color = 'red';
         } elseif ($row['status'] === 'resolved') {
             $text = "{$ref} marked Resolved";
             $color = 'green';
@@ -117,6 +123,7 @@ try {
             'total' => $total,
             'new' => (int)$counts['new_count'],
             'in_progress' => (int)$counts['in_progress_count'],
+            'returned' => (int)$counts['returned_count'],
             'resolved' => $resolved,
             'rejected' => (int)$counts['rejected_count'],
             'closed' => (int)$counts['closed_count'],
